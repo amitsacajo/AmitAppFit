@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#98C2DD"
+    tools:context=".Register">
+
+    <!-- כותרת -->
+    <TextView
+        android:id="@+id/tvReg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="57dp"
+        android:gravity="center"
+        android:text="הרשמה"
+        android:textColor="#A758B8"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/etFname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- שם פרטי -->
+    <EditText
+        android:id="@+id/etFname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:hint="first name"
+        android:inputType="text"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp"
+        android:textColor="#000000"
+        android:textColorHint="#A758B8"
+        android:backgroundTint="#D1C4E9"
+    app:layout_constraintBottom_toTopOf="@+id/etLname"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tvReg" />
+
+    <!-- שם משפחה -->
+    <EditText
+        android:id="@+id/etLname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:hint="last name"
+        android:inputType="text"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp"
+        android:textColor="#000000"
+        android:textColorHint="#A758B8"
+        android:backgroundTint="#FFEBEE"
+    app:layout_constraintBottom_toTopOf="@+id/etPhone"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/etFname" />
+
+    <!-- טלפון -->
+    <EditText
+        android:id="@+id/etPhone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:hint="phone number"
+        android:inputType="phone"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp"
+        android:textColor="#000000"
+        android:textColorHint="#A758B8"
+        android:backgroundTint="#E3F2FD"
+    app:layout_constraintBottom_toTopOf="@+id/etEmail"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/etLname" />
+
+    <!-- אימייל -->
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:hint="email"
+        android:inputType="textEmailAddress"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp"
+        android:textColor="#000000"
+        android:textColorHint="#A758B8"
+        android:backgroundTint="#FFF9C4"
+    app:layout_constraintBottom_toTopOf="@+id/etPassword"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/etPhone" />
+
+    <!-- סיסמא -->
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="40dp"
+        android:hint="password"
+        android:inputType="textPassword"
+        android:background="@drawable/rounded_edittext"
+        android:padding="12dp"
+        android:textColor="#000000"
+        android:textColorHint="#A758B8"
+        android:backgroundTint="#D1C4E9"
+    app:layout_constraintBottom_toTopOf="@+id/btnReg"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+
+    <Button
+        android:id="@+id/btnReg"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="92dp"
+        android:backgroundTint="#A758B8"
+        android:text="הירשם"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "140109158672",
+    "project_id": "amitappfit",
+    "storage_bucket": "amitappfit.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140109158672:android:b8d6a27715d753c3f76d95",
+        "android_client_info": {
+          "package_name": "com.example.amitappfit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYAQjH_3AatNS2nEdehnQ-5E7ZzSgvfKE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
