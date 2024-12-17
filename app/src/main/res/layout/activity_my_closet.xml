@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#98C2DD"
+    tools:context=".myCloset">
+
+    <!-- ScrollView שמאפשר גלילה -->
+    <android.widget.ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <!-- LinearLayout לארגון התוכן באופן אנכי -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- כותרת -->
+            <TextView
+                android:id="@+id/tvMyCloset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="your items!"
+                android:textSize="35sp"
+                android:textColor="#A758B8"
+                android:layout_gravity="center"
+                android:layout_marginBottom="32dp" />
+
+            <!-- כפתור הוספת פריט -->
+            <Button
+                android:id="@+id/btnAddItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="הוסף פריט"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:backgroundTint="#A7C5BD"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center" />
+
+            <!-- כפתור צפייה בלוקים -->
+            <Button
+                android:id="@+id/btnViewLooks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="צפה בלוקים שלי"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:backgroundTint="#F4C6D7"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center" />
+
+        </LinearLayout>
+    </android.widget.ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

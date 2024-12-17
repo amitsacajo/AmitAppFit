@@ -1,6 +1,9 @@
 package com.example.amitappfit;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,7 +11,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    Button btnTOlog, btnTOreg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,9 +26,30 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        initViews();
+    }
 
+    private void initViews() {
+        btnTOlog = findViewById(R.id.btnTOlog);
+        btnTOreg = findViewById(R.id.btnTOreg);
+        btnTOlog.setOnClickListener(this);
+        btnTOreg.setOnClickListener(this);
+    }
 
+    @Override
+    public void onClick(View v) {
+        if (v == btnTOreg) {
+            Intent intentToRegister = new Intent(this, Register.class);
+            startActivity(intentToRegister);
+        }
+        else if (v == btnTOlog) {
+            Intent intentToLogIn = new Intent(this, LogIn.class);
+            startActivity(intentToLogIn);
+        }
+    }
 
-
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 }

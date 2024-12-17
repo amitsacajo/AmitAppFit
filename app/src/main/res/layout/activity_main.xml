@@ -5,8 +5,62 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#98C2DD"
     tools:context=".MainActivity">
 
+
+    <TextView
+        android:id="@+id/tvMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="57dp"
+        android:gravity="center"
+        android:text="creat your look!"
+        android:textColor="#A758B8"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btnTOlog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <Button
+        android:id="@+id/btnTOlog"
+        android:onClick="onClick"
+        android:layout_width="224dp"
+        android:layout_height="92dp"
+        android:backgroundTint="#A7C5BD"
+    android:gravity="center"
+    android:padding="12dp"
+    android:text="log in"
+    android:textColor="#FFFFFF"
+    android:textSize="30sp"
+    android:textStyle="bold"
+
+        app:layout_constraintBottom_toTopOf="@+id/btnTOreg"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tvMain"
+    app:layout_constraintVertical_chainStyle="packed" />
+
+    <Button
+        android:id="@+id/btnTOreg"
+        android:onClick="onClick"
+        android:layout_width="224dp"
+        android:layout_height="92dp"
+        android:backgroundTint="#FFB3C1"
+    android:gravity="center"
+    android:padding="12dp"
+    android:text="sign up"
+    android:textColor="#FFFFFF"
+    android:textSize="30sp"
+    android:textStyle="bold"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/btnTOlog" />
 
 
 
