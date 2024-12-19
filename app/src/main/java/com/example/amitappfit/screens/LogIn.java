@@ -1,4 +1,4 @@
-package com.example.amitappfit;
+package com.example.amitappfit.screens;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.amitappfit.R;
+import com.example.amitappfit.screens.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;

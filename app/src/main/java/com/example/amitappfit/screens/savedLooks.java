@@ -1,4 +1,4 @@
-package com.example.amitappfit;
+package com.example.amitappfit.screens;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.amitappfit.R;
 
 public class savedLooks extends AppCompatActivity {
 

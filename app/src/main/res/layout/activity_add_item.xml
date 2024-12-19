@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#98C2DD"
+    tools:context=".screens.addItem">
+
+    <!-- ScrollView שמאפשר גלילה -->
+    <android.widget.ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <!-- LinearLayout לארגון התוכן באופן אנכי -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- כותרת -->
+            <TextView
+                android:id="@+id/tvAddItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add New Item"
+                android:textSize="35sp"
+                android:textColor="#A758B8"
+                android:layout_gravity="center"
+                android:layout_marginBottom="32dp" />
+
+            <!-- שדה להזנת שם הפריט -->
+            <EditText
+                android:id="@+id/etItemName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Item Name"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:backgroundTint="#A7C5BD"
+                android:layout_marginBottom="16dp" />
+
+            <!-- שדה להזנת קטגוריה -->
+            <Spinner
+                android:id="@+id/spinnerCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:backgroundTint="#A7C5BD"
+                android:layout_marginBottom="16dp" />
+
+
+            <!-- כפתור להעלאת תמונה -->
+            <Button
+                android:id="@+id/btnUploadImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upload Image"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:backgroundTint="#F4C6D7"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:layout_gravity="center" />
+
+            <!-- כפתור לשמירת פריט -->
+            <Button
+                android:id="@+id/btnSaveItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save Item"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:backgroundTint="#A7C5BD"
+                android:padding="12dp"
+                android:layout_gravity="center" />
+
+
+        </LinearLayout>
+    </android.widget.ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
