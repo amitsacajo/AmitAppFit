@@ -11,46 +11,54 @@ import com.example.amitappfit.R;
 import com.example.amitappfit.model.ClosetItem;
 import java.util.List;
 
-public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ClosetViewHolder> {
+public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder> {
 
-    private List<ClosetItem> closetItems;
+    private List<String> items;
 
-    // קונסטרוקטור
-    public ClosetAdapter(List<ClosetItem> closetItems) {
-        this.closetItems = closetItems;
+    public ClosetAdapter(List<String> items) {
+        this.items = items;
     }
 
-    // יצירת ViewHolder חדש
     @NonNull
     @Override
-    public ClosetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // יצירת ViewHolder
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_closet, parent, false); // הקובץ item_closet.xml
-        return new ClosetViewHolder(itemView);
+                .inflate(R.layout.item_closet, parent, false);  // הכנס את ה-XML שלך (כמו item_closet.xml)
+        return new ViewHolder(itemView);
     }
 
-    // ממלאים את ה-ViewHolder עם נתונים
     @Override
-    public void onBindViewHolder(@NonNull ClosetViewHolder holder, int position) {
-        ClosetItem item = closetItems.get(position);
-        holder.itemName.setText(item.getName());
-        holder.itemImage.setImageResource(item.getImageResId());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // הצגת פריט ב-ViewHolder
+        String item = items.get(position);
+        holder.itemName.setText(item);
+        // אם יש לך תמונה או פרמטרים נוספים, תוכל להוסיף אותם כאן
+        // holder.itemImage.setImageResource(R.drawable.some_image); // תמונה דוגמה
     }
 
     @Override
     public int getItemCount() {
-        return closetItems.size();
+        return items.size();
     }
 
-    public static class ClosetViewHolder extends RecyclerView.ViewHolder {
+    // פונקציה לעדכון רשימת הפריטים
+    public void updateItems(List<String> newItems) {
+        this.items = newItems;
+        notifyDataSetChanged(); // עדכון ה-RecyclerView
+    }
+
+    // הגדרת ViewHolder
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView itemName;
-        public ImageView itemImage;
+        public ImageView itemImage; // רק אם אתה מציג גם תמונות
 
-        public ClosetViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.itemName);
-            itemImage = itemView.findViewById(R.id.itemImage);
+            itemName = itemView.findViewById(R.id.itemName); // הגדרת ה-TextView
+            itemImage = itemView.findViewById(R.id.itemImage); // הגדרת ה-ImageView (אם יש תמונה)
         }
     }
 }
+

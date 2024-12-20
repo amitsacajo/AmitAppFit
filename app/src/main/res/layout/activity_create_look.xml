@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#98C2DD"
+    android:padding="16dp">
+
+    <!-- TextView להוראות -->
+    <TextView
+        android:id="@+id/tvCreateLook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create your look!"
+        android:textSize="25sp"
+        android:textColor="#A758B8"
+        android:layout_marginTop="24dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <!-- EditText להקלדת שם הלוק -->
+    <EditText
+        android:id="@+id/etLookName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Look Name"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/tvCreateLook"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"/>
+
+    <!-- Spinner לבחור חולצה -->
+    <Spinner
+        android:id="@+id/spinnerTops"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/etLookName"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"/>
+
+    <!-- Spinner לבחור מכנסיים -->
+    <Spinner
+        android:id="@+id/spinnerBottoms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/spinnerTops"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"/>
+
+    <!-- Spinner לבחור נעליים -->
+    <Spinner
+        android:id="@+id/spinnerShoes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/spinnerBottoms"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"/>
+
+    <!-- כפתור לשמירת הלוק -->
+    <Button
+        android:id="@+id/btnSaveLook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save this look"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:backgroundTint="#A7C5BD"
+        android:padding="12dp"
+        android:layout_below="@id/spinnerShoes"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

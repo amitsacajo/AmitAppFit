@@ -1,75 +1,87 @@
 package com.example.amitappfit.screens;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.amitappfit.R;
-import com.example.amitappfit.adapters.AddItemAdapter;
-import com.example.amitappfit.model.SharedPreferencesManager; // הוספת מחלקת SharedPreferences
+import com.example.amitappfit.model.SharedPreferencesManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class addItem extends AppCompatActivity {
 
-    private List<String> items; // רשימה לפריטים
-    private AddItemAdapter itemsAdapter; // אדפטר ל-RecyclerView
-    private SharedPreferencesManager sharedPreferencesManager; // יצירת מופע של SharedPreferencesManager
+    private EditText etItemName; // שדה להזנת שם הפריט
+    private Spinner spinnerCategory; // Spinner לקטגוריות
+    private Button btnSaveItem; // כפתור לשמירת הפריט
+    private SharedPreferencesManager sharedPreferencesManager; // מנהל SharedPreferences
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_item);
+        setContentView(R.layout.activity_add_item); // מחבר את ה-XML למחלקה
 
-        // יצירת מופע של SharedPreferencesManager
+        // אתחול רכיבים מה-XML
+        etItemName = findViewById(R.id.etItemName);
+        spinnerCategory = findViewById(R.id.spinnerCategory);
+        btnSaveItem = findViewById(R.id.btnSaveItem);
+
+        // אתחול SharedPreferencesManager
         sharedPreferencesManager = new SharedPreferencesManager(this);
 
-        // Spinner לקטגוריות
-        Spinner spinnerCategory = findViewById(R.id.spinnerCategories);
-        Button btnAddItem = findViewById(R.id.btnAddItem);
-        RecyclerView rvClosetItems = findViewById(R.id.rvClosetItems);
+        // הגדרת קטגוריות ל-Spinner
+        setupCategorySpinner();
 
-        // יצירת רשימה של קטגוריות
+        // לחיצה על כפתור "Save Item"
+        btnSaveItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveItem();
+            }
+        });
+    }
+
+    // אתחול Spinner עם קטגוריות
+    private void setupCategorySpinner() {
         List<String> categories = new ArrayList<>();
         categories.add("Tops");
         categories.add("Bottoms");
         categories.add("Shoes");
 
-        // יצירת אדפטר עבור ה-Spinner
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCategory.setAdapter(spinnerAdapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(adapter);
+    }
 
-        // שליפת הפריטים מ-SharedPreferences
-        items = sharedPreferencesManager.getItems();
+    // שמירת הפריט
+    private void saveItem() {
+        String itemName = etItemName.getText().toString().trim();
+        String category = spinnerCategory.getSelectedItem().toString();
 
-        // הגדרת RecyclerView
-        itemsAdapter = new AddItemAdapter(items); // שימוש באדפטר החדש
-        rvClosetItems.setLayoutManager(new LinearLayoutManager(this));
-        rvClosetItems.setAdapter(itemsAdapter);
+        // בדיקות תקינות
+        if (itemName.isEmpty()) {
+            Toast.makeText(this, "Please enter item name", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        // לחיצה על כפתור הוספת פריט
-        btnAddItem.setOnClickListener(view -> {
-            String selectedCategory = spinnerCategory.getSelectedItem().toString();
+        // שמירת פריט ב-SharedPreferences
+        String itemData = itemName + " (" + category + ")";
+        sharedPreferencesManager.saveItem(itemData);
 
-            if (!selectedCategory.isEmpty()) {
-                // שמירת הפריט ב-SharedPreferences
-                sharedPreferencesManager.saveItem(selectedCategory);
+        // הודעה למשתמש
+        Toast.makeText(this, "Item saved: " + itemData, Toast.LENGTH_SHORT).show();
 
-                // עדכון רשימת הפריטים ב-RecyclerView
-                items = sharedPreferencesManager.getItems();
-                itemsAdapter.updateItems(items); // עדכון הפריטים באדפטר
-                Toast.makeText(this, "Item added: " + selectedCategory, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // חזרה ל-MyClosetActivity
+        Intent intent = new Intent(addItem.this, MyClosetActivity.class);
+        startActivity(intent);
+        finish(); // לסגור את המסך הנוכחי
     }
 }
