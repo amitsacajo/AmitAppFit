@@ -1,19 +1,14 @@
 package com.example.amitappfit.screens;
 
+import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.amitappfit.R;
 import com.example.amitappfit.adapters.LookAdapter;
 import com.example.amitappfit.model.Look;
 import com.example.amitappfit.model.SharedPreferencesManager;
-
 import java.util.List;
 
 public class YourSavedLooks extends AppCompatActivity {
@@ -25,15 +20,7 @@ public class YourSavedLooks extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_your_saved_looks);
-
-        // הגדרת Edge-to-Edge
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         // אתחול רכיבי RecyclerView
         rvSavedLooks = findViewById(R.id.rvSavedLooks);
@@ -42,9 +29,24 @@ public class YourSavedLooks extends AppCompatActivity {
         // טעינת הלוקים
         savedLooks = sharedPreferencesManager.getSavedLooks();
 
-        // הגדרת RecyclerView
+        // הגדרת RecyclerView עם כפתור ללחיצה על פריט
         rvSavedLooks.setLayoutManager(new LinearLayoutManager(this));
-        LookAdapter adapter = new LookAdapter(savedLooks);
+        LookAdapter adapter = new LookAdapter(savedLooks, new LookAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Look look) {
+                // פתיחת עמוד עם פרטי הלוק
+                openLookDetails(look);
+            }
+        });
         rvSavedLooks.setAdapter(adapter);
+    }
+
+    private void openLookDetails(Look look) {
+        Intent intent = new Intent(this, LookDetailsActivity.class);
+        intent.putExtra("look_name", look.getName());
+        intent.putExtra("look_top", look.getTop());
+        intent.putExtra("look_bottom", look.getBottom());
+        intent.putExtra("look_shoes", look.getShoes());
+        startActivity(intent);
     }
 }

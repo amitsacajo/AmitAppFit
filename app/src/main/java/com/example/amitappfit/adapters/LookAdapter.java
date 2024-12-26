@@ -16,10 +16,12 @@ import java.util.List;
 public class LookAdapter extends RecyclerView.Adapter<LookAdapter.LookViewHolder> {
 
     private final List<Look> lookList;
+    private final OnItemClickListener listener;
 
-    // קונסטרוקטור
-    public LookAdapter(List<Look> lookList) {
+    // קונסטרוקטור עם OnItemClickListener
+    public LookAdapter(List<Look> lookList, OnItemClickListener listener) {
         this.lookList = lookList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -38,6 +40,9 @@ public class LookAdapter extends RecyclerView.Adapter<LookAdapter.LookViewHolder
         holder.tvTop.setText("Top: " + look.getTop());
         holder.tvBottom.setText("Bottom: " + look.getBottom());
         holder.tvShoes.setText("Shoes: " + look.getShoes());
+
+        // הגדרת לחיצה על פריט
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(look));
     }
 
     @Override
@@ -56,5 +61,10 @@ public class LookAdapter extends RecyclerView.Adapter<LookAdapter.LookViewHolder
             tvBottom = itemView.findViewById(R.id.tvBottom);
             tvShoes = itemView.findViewById(R.id.tvShoes);
         }
+    }
+
+    // ממשק ללחיצה על פריט
+    public interface OnItemClickListener {
+        void onItemClick(Look look);
     }
 }

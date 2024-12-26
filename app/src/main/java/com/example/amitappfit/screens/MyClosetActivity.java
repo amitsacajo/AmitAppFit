@@ -22,7 +22,7 @@ import java.util.List;
 
 public class MyClosetActivity extends AppCompatActivity {
 
-    private Button btnAddItem, btnCreateLook;
+    private Button btnAddItem, btnCreateLook, btnYourSavedLooks; // הוספת כפתור "Your Saved Looks"
     private Spinner spinnerCategories; // Spinner לבחירת קטגוריה
     private RecyclerView rvClosetItems; // RecyclerView להצגת הפריטים
     private ClosetAdapter adapter; // מחלקת האדפטר
@@ -38,6 +38,7 @@ public class MyClosetActivity extends AppCompatActivity {
         spinnerCategories = findViewById(R.id.spinnerCategories);
         rvClosetItems = findViewById(R.id.rvClosetItems);
         btnCreateLook = findViewById(R.id.btnCreateLook);
+        btnYourSavedLooks = findViewById(R.id.btnYourSavedLooks); // אתחול כפתור ה- "Your Saved Looks"
 
         // אתחול SharedPreferencesManager
         sharedPreferencesManager = new SharedPreferencesManager(this);
@@ -69,6 +70,16 @@ public class MyClosetActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // ניווט לעמוד יצירת לוק
                 Intent intent = new Intent(MyClosetActivity.this, CreateLook.class);
+                startActivity(intent);
+            }
+        });
+
+        // לחיצה על כפתור "Your Saved Looks"
+        btnYourSavedLooks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ניווט לעמוד הלוקים השמורים
+                Intent intent = new Intent(MyClosetActivity.this, YourSavedLooks.class);
                 startActivity(intent);
             }
         });
@@ -128,3 +139,4 @@ public class MyClosetActivity extends AppCompatActivity {
         adapter.updateItems(filteredItems);
     }
 }
+

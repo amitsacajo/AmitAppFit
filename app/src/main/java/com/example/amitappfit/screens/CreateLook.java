@@ -1,6 +1,5 @@
 package com.example.amitappfit.screens;
 
-
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.amitappfit.R;
 import com.example.amitappfit.model.SharedPreferencesManager;
+import com.example.amitappfit.model.Look;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +64,13 @@ public class CreateLook extends AppCompatActivity {
         List<String> bottoms = filterItemsByCategory("Bottoms");
         List<String> shoes = filterItemsByCategory("Shoes");
 
-        ArrayAdapter<String> topsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tops);
-        ArrayAdapter<String> bottomsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, bottoms);
-        ArrayAdapter<String> shoesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, shoes);
+        ArrayAdapter<String> topsAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, tops);
+        ArrayAdapter<String> bottomsAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, bottoms);
+        ArrayAdapter<String> shoesAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, shoes);
+
+        topsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        bottomsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        shoesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerTops.setAdapter(topsAdapter);
         spinnerBottoms.setAdapter(bottomsAdapter);
@@ -90,12 +94,23 @@ public class CreateLook extends AppCompatActivity {
             return;
         }
 
+        // אם לא נוספו פריטים לקטגוריה של חולצות, נציג הודעה למשתמש
+        if (spinnerTops.getAdapter() == null || spinnerTops.getAdapter().getCount() == 0) {
+            Toast.makeText(this, "Please add items to Tops category first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String top = spinnerTops.getSelectedItem().toString();
         String bottom = spinnerBottoms.getSelectedItem().toString();
         String shoes = spinnerShoes.getSelectedItem().toString();
 
-        // שמירת הלוק
-        sharedPreferencesManager.saveLook(lookName, top, bottom, shoes);
+        // יצירת לוק חדש
+        Look newLook = new Look(lookName, top, bottom, shoes);
+
+        // שמירת הלוק ב-SharedPreferences
+        sharedPreferencesManager.saveLook(lookName, newLook);
+
+        Toast.makeText(this, "Look \"" + lookName + "\" saved successfully!", Toast.LENGTH_SHORT).show();
 
         // חזרה לעמוד הקודם
         finish();

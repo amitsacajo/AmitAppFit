@@ -3,6 +3,8 @@ package com.example.amitappfit.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,11 +50,15 @@ public class SharedPreferencesManager {
     // ----------------------
 
     // שמירת לוק חדש
-    public void saveLook(String lookName, String top, String bottom, String shoes) {
+    public void saveLook(String lookName, Look look) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(lookName + "_top", top);
-        editor.putString(lookName + "_bottom", bottom);
-        editor.putString(lookName + "_shoes", shoes);
+
+        // המרת אובייקט הלוק ל-JSON
+        Gson gson = new Gson();
+        String lookJson = gson.toJson(look);
+
+        // שמירה תחת שם הלוק
+        editor.putString(lookName, lookJson);
         editor.apply();
     }
 
@@ -60,13 +66,14 @@ public class SharedPreferencesManager {
     public List<Look> getSavedLooks() {
         List<Look> savedLooks = new ArrayList<>();
         Map<String, ?> allKeys = sharedPreferences.getAll();
+        Gson gson = new Gson();
+
+        // שליפת כל הלוקים
         for (String key : allKeys.keySet()) {
-            if (key.contains("_top")) {
-                String lookName = key.split("_")[0];
-                String top = sharedPreferences.getString(lookName + "_top", "");
-                String bottom = sharedPreferences.getString(lookName + "_bottom", "");
-                String shoes = sharedPreferences.getString(lookName + "_shoes", "");
-                savedLooks.add(new Look(lookName, top, bottom, shoes));
+            if (key != null && !key.equals(KEY_ITEMS)) {
+                String lookJson = sharedPreferences.getString(key, "");
+                Look look = gson.fromJson(lookJson, Look.class);
+                savedLooks.add(look);
             }
         }
         return savedLooks;
@@ -75,9 +82,7 @@ public class SharedPreferencesManager {
     // מחיקת לוק לפי שם
     public void deleteLook(String lookName) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(lookName + "_top");
-        editor.remove(lookName + "_bottom");
-        editor.remove(lookName + "_shoes");
+        editor.remove(lookName);
         editor.apply();
     }
 }

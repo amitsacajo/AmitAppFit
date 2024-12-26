@@ -60,6 +60,19 @@
                 android:layout_marginBottom="16dp"
                 android:layout_gravity="center" />
 
+            <Button
+                android:id="@+id/btnYourSavedLooks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Saved Looks"
+                android:onClick="onClickYourSavedLooks"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:backgroundTint="#FFB6C1"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:layout_gravity="center" />
+
             <!-- Spinner לקטגוריות -->
             <Spinner
                 android:id="@+id/spinnerCategories"
