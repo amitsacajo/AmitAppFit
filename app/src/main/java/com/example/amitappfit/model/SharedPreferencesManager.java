@@ -40,9 +40,28 @@ public class SharedPreferencesManager {
         return new ArrayList<>();
     }
 
+    // שמירת רשימה של פריטים
+    private void saveItems(List<String> items) {
+        StringBuilder itemsBuilder = new StringBuilder();
+        for (String item : items) {
+            itemsBuilder.append(item).append(",");
+        }
+        sharedPreferences.edit().putString(KEY_ITEMS, itemsBuilder.toString()).apply();
+    }
+
     // מחיקת כל הפריטים
     public void clearItems() {
         sharedPreferences.edit().remove(KEY_ITEMS).apply();
+    }
+
+    // עדכון פריט קיים
+    public void updateItem(String oldItem, String newItem) {
+        List<String> items = getItems();
+        int index = items.indexOf(oldItem);
+        if (index != -1) {
+            items.set(index, newItem); // מחליף את הפריט הישן בחדש
+        }
+        saveItems(items); // שומר את הרשימה המעודכנת
     }
 
     // ----------------------

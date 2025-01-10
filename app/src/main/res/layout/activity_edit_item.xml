@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#98C2DD"
+    android:padding="16dp"
+    android:gravity="center"
+    android:layout_marginTop="0dp">
+
+    <!-- שם הפריט -->
+    <EditText
+        android:id="@+id/etItemName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter item name"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="0dp"/>
+
+    <!-- קטגוריה -->
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#A7C5BD" />
+
+    <!-- כפתור שמירה -->
+    <Button
+        android:id="@+id/btnSaveChanges"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Changes"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#F4C6D7"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center"/>
+</LinearLayout>

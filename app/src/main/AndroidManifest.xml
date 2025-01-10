@@ -13,9 +13,11 @@
         android:theme="@style/Theme.AmitAppFit"
         tools:targetApi="31">
         <activity
-            android:name=".screens.LookDetailsActivity"
+            android:name=".screens.EditItemActivity"
             android:exported="false" />
-        <!-- הגדרה של הפעילויות -->
+        <activity
+            android:name=".screens.LookDetailsActivity"
+            android:exported="false" /> <!-- הגדרה של הפעילויות -->
         <activity
             android:name=".screens.YourSavedLooks"
             android:exported="false" /> <!-- הפעילות CreateLook צריכה להיות עם exported="true" -->
@@ -34,7 +36,6 @@
         <activity
             android:name=".screens.addItem"
             android:exported="false" />
-
         <activity
             android:name=".screens.MainActivity"
             android:exported="false" />

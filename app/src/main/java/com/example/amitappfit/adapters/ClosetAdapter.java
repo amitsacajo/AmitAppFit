@@ -1,22 +1,29 @@
 package com.example.amitappfit.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.amitappfit.R;
-import com.example.amitappfit.model.ClosetItem;
+import com.example.amitappfit.screens.EditItemActivity;
+
 import java.util.List;
 
 public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder> {
 
     private List<String> items;
+    private Context context; // נדרש כדי להפעיל Intents
 
-    public ClosetAdapter(List<String> items) {
+    public ClosetAdapter(List<String> items, Context context) {
         this.items = items;
+        this.context = context;
     }
 
     @NonNull
@@ -24,7 +31,7 @@ public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // יצירת ViewHolder
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_closet, parent, false);  // הכנס את ה-XML שלך (כמו item_closet.xml)
+                .inflate(R.layout.item_closet, parent, false);
         return new ViewHolder(itemView);
     }
 
@@ -33,8 +40,20 @@ public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder
         // הצגת פריט ב-ViewHolder
         String item = items.get(position);
         holder.itemName.setText(item);
-        // אם יש לך תמונה או פרמטרים נוספים, תוכל להוסיף אותם כאן
-        // holder.itemImage.setImageResource(R.drawable.some_image); // תמונה דוגמה
+
+        // אם יש לך תמונה או פרמטרים נוספים, ניתן להוסיף אותם כאן
+        // holder.itemImage.setImageResource(R.drawable.some_image);
+
+        // הגדרת Listener ללחיצה על פריט
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // פתיחת עמוד EditItemActivity עם המידע של הפריט שנבחר
+                Intent intent = new Intent(context, EditItemActivity.class);
+                intent.putExtra("itemData", item); // מעביר את המידע על הפריט לעמוד העריכה
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -61,4 +80,3 @@ public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder
         }
     }
 }
-

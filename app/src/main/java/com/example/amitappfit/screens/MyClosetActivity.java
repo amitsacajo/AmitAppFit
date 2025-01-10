@@ -44,9 +44,11 @@ public class MyClosetActivity extends AppCompatActivity {
         sharedPreferencesManager = new SharedPreferencesManager(this);
 
         // הגדרת RecyclerView
+        // הגדרת RecyclerView
         rvClosetItems.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ClosetAdapter(new ArrayList<>());
+        adapter = new ClosetAdapter(new ArrayList<>(), this);
         rvClosetItems.setAdapter(adapter);
+
 
         // הגדרת Spinner עם קטגוריות
         setupCategorySpinner();
