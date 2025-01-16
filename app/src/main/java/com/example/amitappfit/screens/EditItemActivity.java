@@ -22,6 +22,7 @@ public class EditItemActivity extends AppCompatActivity {
     private EditText etItemName;
     private Spinner spinnerCategory;
     private Button btnSaveChanges;
+    private Button btnDeleteItem;
     private SharedPreferencesManager sharedPreferencesManager;
 
     private String originalItemData; // הפריט המקורי שנבחר
@@ -34,6 +35,7 @@ public class EditItemActivity extends AppCompatActivity {
         etItemName = findViewById(R.id.etItemName);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         btnSaveChanges = findViewById(R.id.btnSaveChanges);
+        btnDeleteItem = findViewById(R.id.btnDeleteItem); // הוספת כפתור מחיקה
 
         sharedPreferencesManager = new SharedPreferencesManager(this);
 
@@ -52,6 +54,14 @@ public class EditItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveChanges();
+            }
+        });
+
+        // מחיקת הפריט
+        btnDeleteItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteItem();
             }
         });
     }
@@ -88,6 +98,17 @@ public class EditItemActivity extends AppCompatActivity {
         Toast.makeText(this, "Item updated successfully", Toast.LENGTH_SHORT).show();
 
         // חזרה למסך הארון
+        Intent intent = new Intent(EditItemActivity.this, MyClosetActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    // פונקציית מחיקה
+    private void deleteItem() {
+        sharedPreferencesManager.deleteItem(originalItemData);  // מחיקת הפריט
+        Toast.makeText(this, "Item deleted successfully", Toast.LENGTH_SHORT).show();
+
+        // חזרה למסך הארון לאחר המחיקה
         Intent intent = new Intent(EditItemActivity.this, MyClosetActivity.class);
         startActivity(intent);
         finish();

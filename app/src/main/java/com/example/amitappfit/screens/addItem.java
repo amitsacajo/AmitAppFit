@@ -1,11 +1,13 @@
 package com.example.amitappfit.screens;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -22,7 +24,10 @@ public class addItem extends AppCompatActivity {
     private EditText etItemName; // שדה להזנת שם הפריט
     private Spinner spinnerCategory; // Spinner לקטגוריות
     private Button btnSaveItem; // כפתור לשמירת הפריט
+    private Button btnUploadImage; // כפתור להעלאת תמונה
+    private ImageView ivPreview; // תצוגת מקדימה של התמונה
     private SharedPreferencesManager sharedPreferencesManager; // מנהל SharedPreferences
+    private static final int PICK_IMAGE_REQUEST = 1; // מזהה לבחירת תמונה
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,8 @@ public class addItem extends AppCompatActivity {
         etItemName = findViewById(R.id.etItemName);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         btnSaveItem = findViewById(R.id.btnSaveItem);
+        btnUploadImage = findViewById(R.id.btnUploadImage);
+        ivPreview = findViewById(R.id.ivPreview);
 
         // אתחול SharedPreferencesManager
         sharedPreferencesManager = new SharedPreferencesManager(this);
@@ -47,6 +54,14 @@ public class addItem extends AppCompatActivity {
                 saveItem();
             }
         });
+
+        // לחיצה על כפתור "Upload Image"
+        btnUploadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImagePicker();
+            }
+        });
     }
 
     // אתחול Spinner עם קטגוריות
@@ -59,6 +74,24 @@ public class addItem extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
+    }
+
+    // פתיחת בורר תמונות
+    private void openImagePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            ivPreview.setImageURI(imageUri);
+            Toast.makeText(this, "Image selected successfully", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // שמירת הפריט

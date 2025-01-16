@@ -53,7 +53,6 @@
                 android:backgroundTint="#A7C5BD"
                 android:layout_marginBottom="16dp" />
 
-
             <!-- כפתור להעלאת תמונה -->
             <Button
                 android:id="@+id/btnUploadImage"
@@ -67,6 +66,16 @@
                 android:layout_marginBottom="16dp"
                 android:layout_gravity="center" />
 
+            <!-- תצוגת מקדימה של התמונה -->
+            <ImageView
+                android:id="@+id/ivPreview"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:scaleType="centerCrop"
+                android:background="#CCCCCC" />
+
             <!-- כפתור לשמירת פריט -->
             <Button
                 android:id="@+id/btnSaveItem"
@@ -78,8 +87,6 @@
                 android:backgroundTint="#A7C5BD"
                 android:padding="12dp"
                 android:layout_gravity="center" />
-
-
         </LinearLayout>
     </android.widget.ScrollView>
 

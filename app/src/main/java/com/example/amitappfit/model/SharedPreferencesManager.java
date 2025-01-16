@@ -24,6 +24,16 @@ public class SharedPreferencesManager {
     // פונקציות לפריטים (Items)
     // ----------------------
 
+
+    // מחיקת פריט
+    public void deleteItem(String itemData) {
+        List<String> items = getItems();
+        if (items.remove(itemData)) {  // מנסה להסיר את הפריט
+            saveItems(items);  // שומר את הרשימה המעודכנת
+        }
+    }
+
+
     // שמירת פריט חדש
     public void saveItem(String itemName) {
         String existingItems = sharedPreferences.getString(KEY_ITEMS, "");

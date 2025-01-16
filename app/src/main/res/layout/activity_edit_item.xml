@@ -39,4 +39,19 @@
         android:padding="10dp"
         android:layout_marginBottom="16dp"
         android:layout_gravity="center"/>
+
+
+    <!-- כפתור מחיקה -->
+    <Button
+        android:id="@+id/btnDeleteItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Item"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#F68BA9"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center"/>
+
 </LinearLayout>
