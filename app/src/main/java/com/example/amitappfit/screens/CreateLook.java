@@ -167,7 +167,7 @@ public class CreateLook extends AppCompatActivity {
         String id = databaseService.generateNewLookId();
 
         // יצירת לוק חדש
-        Look newLook = new Look(id, lookName, new Item(top, ImageUtil.convertTo64Base(ivTop)), new Item(bottom, null), new Item(shoes, null)); // TODO
+        Look newLook = new Look(id, lookName, new Item(top, ImageUtil.convertTo64Base(ivTop)), new Item(bottom, null), new Item(shoes, null));
 
         databaseService.createNewLook(newLook, new DatabaseService.DatabaseCallback<Void>() {
             @Override
