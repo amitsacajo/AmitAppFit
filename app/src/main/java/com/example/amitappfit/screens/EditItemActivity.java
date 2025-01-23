@@ -1,41 +1,58 @@
 package com.example.amitappfit.screens;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.amitappfit.R;
 import com.example.amitappfit.model.SharedPreferencesManager;
+import com.example.amitappfit.util.ImageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditItemActivity extends AppCompatActivity {
+public class EditItemActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText etItemName;
     private Spinner spinnerCategory;
     private Button btnSaveChanges;
     private Button btnDeleteItem;
+    private ImageView ivPreview;
     private SharedPreferencesManager sharedPreferencesManager;
 
-    private String originalItemData; // הפריט המקורי שנבחר
+    private String originalItemData;
+
+    /// Activity result launcher for selecting image from gallery
+    private ActivityResultLauncher<Intent> selectImageLauncher;
+    /// Activity result launcher for capturing image from camera
+    private ActivityResultLauncher<Intent> captureImageLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
 
+        ImageUtil.requestPermission(this);
+
         etItemName = findViewById(R.id.etItemName);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         btnSaveChanges = findViewById(R.id.btnSaveChanges);
-        btnDeleteItem = findViewById(R.id.btnDeleteItem); // הוספת כפתור מחיקה
+        btnDeleteItem = findViewById(R.id.btnDeleteItem);
+        ivPreview = findViewById(R.id.ivPreview);
 
         sharedPreferencesManager = new SharedPreferencesManager(this);
 
@@ -44,26 +61,22 @@ public class EditItemActivity extends AppCompatActivity {
         originalItemData = intent.getStringExtra("itemData");
         if (originalItemData != null) {
             String[] itemParts = originalItemData.split(" \\(");
-            etItemName.setText(itemParts[0]); // שם הפריט
-            String category = itemParts[1].replace(")", ""); // קטגוריה
-            setupCategorySpinner(category); // הגדרת הקטגוריה הנוכחית ב-Spinner
+            etItemName.setText(itemParts[0]);
+            String category = itemParts[1].replace(")", "");
+            setupCategorySpinner(category);
         }
 
         // שמירת השינויים
-        btnSaveChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveChanges();
-            }
-        });
+        btnSaveChanges.setOnClickListener(v -> saveChanges());
 
         // מחיקת הפריט
-        btnDeleteItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteItem();
-            }
-        });
+        btnDeleteItem.setOnClickListener(v -> deleteItem());
+
+        // לחיצה על כפתור "Upload Image"
+        ivPreview.setOnClickListener(this);
+
+        // אתחול של ה-ActivityResultLauncher עבור גלריה ומצלמה
+        setupImageLaunchers();
     }
 
     private void setupCategorySpinner(String selectedCategory) {
@@ -76,11 +89,30 @@ public class EditItemActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
 
-        // הגדרת הקטגוריה הנבחרת
         int position = categories.indexOf(selectedCategory);
         if (position != -1) {
             spinnerCategory.setSelection(position);
         }
+    }
+
+    private void setupImageLaunchers() {
+        selectImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri selectedImage = result.getData().getData();
+                        ivPreview.setImageURI(selectedImage);
+                    }
+                });
+
+        captureImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Bitmap bitmap = (Bitmap) result.getData().getExtras().get("data");
+                        ivPreview.setImageBitmap(bitmap);
+                    }
+                });
     }
 
     private void saveChanges() {
@@ -97,20 +129,44 @@ public class EditItemActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Item updated successfully", Toast.LENGTH_SHORT).show();
 
-        // חזרה למסך הארון
         Intent intent = new Intent(EditItemActivity.this, MyClosetActivity.class);
         startActivity(intent);
         finish();
     }
 
-    // פונקציית מחיקה
     private void deleteItem() {
-        sharedPreferencesManager.deleteItem(originalItemData);  // מחיקת הפריט
+        sharedPreferencesManager.deleteItem(originalItemData);
         Toast.makeText(this, "Item deleted successfully", Toast.LENGTH_SHORT).show();
 
-        // חזרה למסך הארון לאחר המחיקה
         Intent intent = new Intent(EditItemActivity.this, MyClosetActivity.class);
         startActivity(intent);
         finish();
     }
+
+    @Override
+    public void onClick(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Image Source");
+
+        builder.setItems(new String[]{"Gallery", "Camera"}, (dialog, which) -> {
+            if (which == 0) {
+                selectImageFromGallery();
+            } else if (which == 1) {
+                captureImageFromCamera();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void selectImageFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        selectImageLauncher.launch(intent);
+    }
+
+    private void captureImageFromCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        captureImageLauncher.launch(takePictureIntent);
+    }
 }
+

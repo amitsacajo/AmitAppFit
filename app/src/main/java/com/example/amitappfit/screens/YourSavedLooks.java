@@ -43,10 +43,7 @@ public class YourSavedLooks extends AppCompatActivity {
 
     private void openLookDetails(Look look) {
         Intent intent = new Intent(this, LookDetailsActivity.class);
-        intent.putExtra("look_name", look.getName());
-        intent.putExtra("look_top", look.getTop());
-        intent.putExtra("look_bottom", look.getBottom());
-        intent.putExtra("look_shoes", look.getShoes());
+        intent.putExtra("look_id", look.getId());
         startActivity(intent);
     }
 }

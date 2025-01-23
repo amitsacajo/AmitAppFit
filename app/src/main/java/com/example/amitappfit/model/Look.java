@@ -1,20 +1,35 @@
 package com.example.amitappfit.model;
 
-public class Look {
-    private String name;
-    private String top;
-    private String bottom;
-    private String shoes;
+import androidx.annotation.NonNull;
 
-    // Constructor
-    public Look(String name, String top, String bottom, String shoes) {
+public class Look {
+    private String id;
+
+    private String name;
+    private Item top;
+    private Item bottom;
+    private Item shoes;
+
+
+    public Look() {
+    }
+
+    public Look(String id, String name, Item top, Item bottom, Item shoes) {
+        this.id = id;
         this.name = name;
         this.top = top;
         this.bottom = bottom;
         this.shoes = shoes;
     }
 
-    // Getters and Setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -23,27 +38,39 @@ public class Look {
         this.name = name;
     }
 
-    public String getTop() {
+    public Item getTop() {
         return top;
     }
 
-    public void setTop(String top) {
+    public void setTop(Item top) {
         this.top = top;
     }
 
-    public String getBottom() {
+    public Item getBottom() {
         return bottom;
     }
 
-    public void setBottom(String bottom) {
+    public void setBottom(Item bottom) {
         this.bottom = bottom;
     }
 
-    public String getShoes() {
+    public Item getShoes() {
         return shoes;
     }
 
-    public void setShoes(String shoes) {
+    public void setShoes(Item shoes) {
         this.shoes = shoes;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Look{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", top=" + top +
+                ", bottom=" + bottom +
+                ", shoes=" + shoes +
+                '}';
     }
 }

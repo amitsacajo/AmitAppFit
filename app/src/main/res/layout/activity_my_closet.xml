@@ -33,6 +33,7 @@
                 android:layout_marginBottom="32dp" />
 
             <!-- כפתור הוספת פריט -->
+
             <Button
                 android:id="@+id/btnAddItem"
                 android:layout_width="wrap_content"

@@ -1,20 +1,27 @@
 package com.example.amitappfit.screens;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.amitappfit.R;
+import com.example.amitappfit.model.Item;
 import com.example.amitappfit.model.SharedPreferencesManager;
 import com.example.amitappfit.model.Look;
+import com.example.amitappfit.services.DatabaseService;
+import com.example.amitappfit.util.ImageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +33,9 @@ public class CreateLook extends AppCompatActivity {
     private Button btnSaveLook;
     private SharedPreferencesManager sharedPreferencesManager;
     private List<String> allItems;
+    DatabaseService databaseService;
+
+    int selectedButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +48,10 @@ public class CreateLook extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        selectedButton = -1;
+
+        databaseService = DatabaseService.getInstance();
 
         // אתחול רכיבים
         etLookName = findViewById(R.id.etLookName);
@@ -57,6 +71,52 @@ public class CreateLook extends AppCompatActivity {
 
         // שמירת הלוק
         btnSaveLook.setOnClickListener(v -> saveLook());
+
+        /// register the activity result launcher for selecting image from gallery
+        selectImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        ImageView iv;
+                        if (selectedButton == 1) {
+                            iv = ivTop;
+                        } else if (selectedButton == 2) {
+                            iv = ivBottom;
+                        } else if (selectedButton == 3) {
+                            iv = ivShoes;
+                        } else {
+                            return;
+                        }
+
+                        Uri selectedImage = result.getData().getData();
+                        iv.setImageURI(selectedImage);
+                        /// set the tag for the image view to null
+                        iv.setTag(null);
+                    }
+                });
+
+        /// register the activity result launcher for capturing image from camera
+        captureImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Bitmap bitmap = (Bitmap) result.getData().getExtras().get("data");
+                        ImageView iv;
+                        if (selectedButton == 1) {
+                            iv = ivTop;
+                        } else if (selectedButton == 2) {
+                            iv = ivBottom;
+                        } else if (selectedButton == 3) {
+                            iv = ivShoes;
+                        } else {
+                            return;
+                        }
+                        iv.setImageBitmap(bitmap);
+                        /// set the tag for the image view to null
+                        iv.setTag(null);
+                    }
+                });
+
     }
 
     private void setupSpinners() {
@@ -104,15 +164,29 @@ public class CreateLook extends AppCompatActivity {
         String bottom = spinnerBottoms.getSelectedItem().toString();
         String shoes = spinnerShoes.getSelectedItem().toString();
 
+        String id = databaseService.generateNewLookId();
+
         // יצירת לוק חדש
-        Look newLook = new Look(lookName, top, bottom, shoes);
+        Look newLook = new Look(id, lookName, new Item(top, ImageUtil.convertTo64Base(ivTop)), new Item(bottom, null), new Item(shoes, null)); // TODO
 
-        // שמירת הלוק ב-SharedPreferences
-        sharedPreferencesManager.saveLook(lookName, newLook);
+        databaseService.createNewLook(newLook, new DatabaseService.DatabaseCallback<Void>() {
+            @Override
+            public void onCompleted(Void object) {
+                // שמירת הלוק ב-SharedPreferences
+                sharedPreferencesManager.saveLook(lookName, newLook);
 
-        Toast.makeText(this, "Look \"" + lookName + "\" saved successfully!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Look \"" + lookName + "\" saved successfully!", Toast.LENGTH_SHORT).show();
 
-        // חזרה לעמוד הקודם
-        finish();
+                // חזרה לעמוד הקודם
+                finish();
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
+
+
     }
 }

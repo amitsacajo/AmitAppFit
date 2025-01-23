@@ -1,8 +1,11 @@
 package com.example.amitappfit.screens;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -11,34 +14,45 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.amitappfit.R;
+import com.example.amitappfit.adapters.ImageSourceAdapter;
 import com.example.amitappfit.model.SharedPreferencesManager;
+import com.example.amitappfit.util.ImageUtil;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class addItem extends AppCompatActivity {
+public class addItem extends AppCompatActivity implements View.OnClickListener {
 
     private EditText etItemName; // שדה להזנת שם הפריט
     private Spinner spinnerCategory; // Spinner לקטגוריות
     private Button btnSaveItem; // כפתור לשמירת הפריט
-    private Button btnUploadImage; // כפתור להעלאת תמונה
     private ImageView ivPreview; // תצוגת מקדימה של התמונה
     private SharedPreferencesManager sharedPreferencesManager; // מנהל SharedPreferences
-    private static final int PICK_IMAGE_REQUEST = 1; // מזהה לבחירת תמונה
+
+    /// Activity result launcher for selecting image from gallery
+    private ActivityResultLauncher<Intent> selectImageLauncher;
+    /// Activity result launcher for capturing image from camera
+    private ActivityResultLauncher<Intent> captureImageLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item); // מחבר את ה-XML למחלקה
 
+        ImageUtil.requestPermission(this);
+
         // אתחול רכיבים מה-XML
         etItemName = findViewById(R.id.etItemName);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         btnSaveItem = findViewById(R.id.btnSaveItem);
-        btnUploadImage = findViewById(R.id.btnUploadImage);
         ivPreview = findViewById(R.id.ivPreview);
 
         // אתחול SharedPreferencesManager
@@ -56,12 +70,45 @@ public class addItem extends AppCompatActivity {
         });
 
         // לחיצה על כפתור "Upload Image"
-        btnUploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openImagePicker();
-            }
-        });
+        ivPreview.setOnClickListener(this);
+
+
+
+        /// register the activity result launcher for selecting image from gallery
+        selectImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri selectedImage = result.getData().getData();
+                        ivPreview.setImageURI(selectedImage);
+                        /// set the tag for the image view to null
+                        ivPreview.setTag(null);
+                    }
+                });
+
+        /// register the activity result launcher for capturing image from camera
+        captureImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Bitmap bitmap = (Bitmap) result.getData().getExtras().get("data");
+                        ivPreview.setImageBitmap(bitmap);
+                        /// set the tag for the image view to null
+                        ivPreview.setTag(null);
+                    }
+                });
+    }
+
+    /// select image from gallery
+    private void selectImageFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        selectImageLauncher.launch(intent);
+    }
+
+    /// capture image from camera
+    private void captureImageFromCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        captureImageLauncher.launch(takePictureIntent);
     }
 
     // אתחול Spinner עם קטגוריות
@@ -76,23 +123,6 @@ public class addItem extends AppCompatActivity {
         spinnerCategory.setAdapter(adapter);
     }
 
-    // פתיחת בורר תמונות
-    private void openImagePicker() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
-            ivPreview.setImageURI(imageUri);
-            Toast.makeText(this, "Image selected successfully", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     // שמירת הפריט
     private void saveItem() {
@@ -116,5 +146,27 @@ public class addItem extends AppCompatActivity {
         Intent intent = new Intent(addItem.this, MyClosetActivity.class);
         startActivity(intent);
         finish(); // לסגור את המסך הנוכחי
+    }
+
+    @Override
+    public void onClick(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Image Source");
+
+        final ArrayList<Map.Entry<String, Integer>> options = new ArrayList<>();
+        options.add(new AbstractMap.SimpleEntry<>("Gallery", R.drawable.gallery_thumbnail));
+        options.add(new AbstractMap.SimpleEntry<>("Camera", R.drawable.photo_camera));
+
+        ImageSourceAdapter adapter = new ImageSourceAdapter(getApplicationContext(), options);
+
+        builder.setAdapter(adapter, (DialogInterface dialog, int index) -> {
+            if (index == 0) {
+                selectImageFromGallery();
+            } else if (index == 1) {
+                captureImageFromCamera();
+            }
+        });
+
+        builder.show();
     }
 }

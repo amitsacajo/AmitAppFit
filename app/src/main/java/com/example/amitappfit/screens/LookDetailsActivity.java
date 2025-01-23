@@ -10,7 +10,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.amitappfit.R;
+import com.example.amitappfit.model.Look;
 import com.example.amitappfit.model.SharedPreferencesManager;
+import com.example.amitappfit.services.DatabaseService;
 
 public class LookDetailsActivity extends AppCompatActivity {
 
@@ -18,10 +20,14 @@ public class LookDetailsActivity extends AppCompatActivity {
     private Button btnDeleteLook;
     private SharedPreferencesManager sharedPreferencesManager;
 
+    DatabaseService databaseService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_look_details);
+
+        databaseService = DatabaseService.getInstance();
 
         // הגדרת TextViews
         tvLookName = findViewById(R.id.tvLookName);
@@ -35,36 +41,58 @@ public class LookDetailsActivity extends AppCompatActivity {
 
         // קבלת הנתונים מה-Intent
         Intent intent = getIntent();
-        String lookName = intent.getStringExtra("look_name");
-        String top = intent.getStringExtra("look_top");
-        String bottom = intent.getStringExtra("look_bottom");
-        String shoes = intent.getStringExtra("look_shoes");
+        String lookId = intent.getStringExtra("look_id");
 
-        // הצגת הנתונים ב-TextViews
-        tvLookName.setText(lookName);
-        tvTop.setText("Top: " + top);
-        tvBottom.setText("Bottom: " + bottom);
-        tvShoes.setText("Shoes: " + shoes);
+        databaseService.getLook(lookId, new DatabaseService.DatabaseCallback<Look>() {
+            @Override
+            public void onCompleted(Look look) {
+                // הצגת הנתונים ב-TextViews
+                tvLookName.setText(look.getName());
+                tvTop.setText("Top: " + look.getTop());
+                tvBottom.setText("Bottom: " + look.getBottom());
+                tvShoes.setText("Shoes: " + look.getShoes());
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
+
+
+
 
         // הגדרת לחיצה על כפתור מחיקה
         btnDeleteLook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteLook(lookName); // מחיקת הלוק
+                deleteLook(lookId); // מחיקת הלוק
             }
         });
     }
 
     // פונקציה למחיקת הלוק
-    private void deleteLook(String lookName) {
-        sharedPreferencesManager.deleteLook(lookName); // מחיקת הלוק מה-SharedPreferences
+    private void deleteLook(String lookId) {
 
-        // הצגת הודעה למשתמש
-        Toast.makeText(LookDetailsActivity.this, "Look deleted successfully", Toast.LENGTH_SHORT).show();
+        databaseService.deleteLook(lookId, new DatabaseService.DatabaseCallback<Void>() {
+            @Override
+            public void onCompleted(Void object) {
+                sharedPreferencesManager.deleteLook(lookId); // מחיקת הלוק מה-SharedPreferences
 
-        // חזרה למסך הראשי או כל מסך אחר
-        Intent intent = new Intent(LookDetailsActivity.this, MyClosetActivity.class);
-        startActivity(intent);
-        finish();
+                // הצגת הודעה למשתמש
+                Toast.makeText(LookDetailsActivity.this, "Look deleted successfully", Toast.LENGTH_SHORT).show();
+
+                // חזרה למסך הראשי או כל מסך אחר
+                Intent intent = new Intent(LookDetailsActivity.this, MyClosetActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
+
     }
 }

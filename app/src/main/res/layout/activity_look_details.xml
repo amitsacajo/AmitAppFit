@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android/tools"
+    xmlns:tools2="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#98C2DD"
@@ -13,57 +13,85 @@
         android:id="@+id/tvLookName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="56dp"
         android:textColor="#A758B8"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_centerHorizontal="true" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools2:text="name" />
 
     <!-- פרטי החולצה -->
     <TextView
         android:id="@+id/tvTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="106dp"
         android:text="Top: "
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvLookName"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- פרטי המכנסיים -->
     <TextView
         android:id="@+id/tvBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bottom: "
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvTop"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="Bottom: "
+        app:layout_constraintStart_toStartOf="@+id/tvTop"
+        app:layout_constraintTop_toBottomOf="@+id/tvTop" />
 
     <!-- פרטי הנעליים -->
     <TextView
         android:id="@+id/tvShoes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Shoes: "
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tvBottom"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="Shoes: "
+        app:layout_constraintStart_toStartOf="@+id/tvBottom"
+        app:layout_constraintTop_toBottomOf="@+id/tvBottom" />
 
     <!-- כפתור מחיקת לוק -->
     <Button
         android:id="@+id/btnDeleteLook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="136dp"
+        android:layout_marginEnd="136dp"
+        android:layout_marginBottom="29dp"
+        android:backgroundTint="#F4C6D7"
+        android:padding="10dp"
         android:text="Delete Look"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#F4C6D7"
         android:textSize="16sp"
-        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvShoes" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="263dp"
+        android:layout_height="509dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="298dp"
+        app:layout_constraintStart_toStartOf="@+id/btnDeleteLook"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/women" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="64dp"
         android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/tvShoes"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnDeleteLook"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvBottom"
+        app:layout_constraintTop_toBottomOf="@+id/tvLookName"
+        tools2:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

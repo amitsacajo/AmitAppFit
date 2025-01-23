@@ -29,19 +29,20 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="198dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="232dp"
         android:background="@drawable/rounded_edittext"
-        android:backgroundTint="#FFF9C4"
+        android:backgroundTint="#9FE6DC"
         android:hint="email"
         android:inputType="textEmailAddress"
         android:padding="12dp"
         android:textColor="#000000"
         android:textColorHint="#A758B8"
-        app:layout_constraintBottom_toTopOf="@+id/etPassword"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/etPassword"
@@ -68,16 +69,16 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="51dp"
         android:backgroundTint="#A7C5BD"
-    android:elevation="4dp"
-    android:text="log in"
-    android:textColor="#FFFFFF"
-    android:textSize="18sp"
-    android:textStyle="bold"
-    android:padding="12dp"
-    app:layout_constraintBottom_toTopOf="@+id/btnSignUp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+        android:elevation="4dp"
+        android:padding="12dp"
+        android:text="log in"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btnSignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
 
     <Button
         android:id="@+id/btnSignUp"
@@ -85,17 +86,28 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="152dp"
         android:backgroundTint="#FFB3C1"
-    android:elevation="4dp"
-    android:text="sign up"
-    android:textColor="@color/white"
-    android:textSize="18sp"
-    android:textStyle="bold"
-    android:padding="12dp"
-    android:onClick="onClick"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/btnLog" />
+        android:elevation="4dp"
+        android:onClick="onClick"
+        android:padding="12dp"
+        android:text="sign up"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLog" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="173dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="147dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/women"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/btnLog"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
