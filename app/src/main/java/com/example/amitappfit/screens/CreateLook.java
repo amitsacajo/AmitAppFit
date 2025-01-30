@@ -1,3 +1,4 @@
+/*
 package com.example.amitappfit.screens;
 
 import android.graphics.Bitmap;
@@ -190,3 +191,4 @@ public class CreateLook extends AppCompatActivity {
 
     }
 }
+*/
