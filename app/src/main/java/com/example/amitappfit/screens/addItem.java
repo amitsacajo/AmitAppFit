@@ -21,7 +21,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.amitappfit.R;
 import com.example.amitappfit.adapters.ImageSourceAdapter;
+import com.example.amitappfit.model.Item;
 import com.example.amitappfit.model.SharedPreferencesManager;
+import com.example.amitappfit.services.DatabaseService;
 import com.example.amitappfit.util.ImageUtil;
 
 import java.util.AbstractMap;
@@ -33,14 +35,14 @@ public class addItem extends AppCompatActivity implements View.OnClickListener {
 
     private EditText etItemName; // שדה להזנת שם הפריט
     private Spinner spinnerCategory; // Spinner לקטגוריות
-    private Button btnSaveItem; // כפתור לשמירת הפריט
     private ImageView ivPreview; // תצוגת מקדימה של התמונה
-    private SharedPreferencesManager sharedPreferencesManager; // מנהל SharedPreferences
 
     /// Activity result launcher for selecting image from gallery
     private ActivityResultLauncher<Intent> selectImageLauncher;
     /// Activity result launcher for capturing image from camera
     private ActivityResultLauncher<Intent> captureImageLauncher;
+
+    DatabaseService databaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +50,14 @@ public class addItem extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_add_item); // מחבר את ה-XML למחלקה
 
         ImageUtil.requestPermission(this);
+        databaseService = DatabaseService.getInstance();
 
         // אתחול רכיבים מה-XML
         etItemName = findViewById(R.id.etItemName);
         spinnerCategory = findViewById(R.id.spinnerCategory);
-        btnSaveItem = findViewById(R.id.btnSaveItem);
+        // כפתור לשמירת הפריט
+        Button btnSaveItem = findViewById(R.id.btnSaveItem);
         ivPreview = findViewById(R.id.ivPreview);
-
-        // אתחול SharedPreferencesManager
-        sharedPreferencesManager = new SharedPreferencesManager(this);
 
         // הגדרת קטגוריות ל-Spinner
         setupCategorySpinner();
@@ -135,17 +136,20 @@ public class addItem extends AppCompatActivity implements View.OnClickListener {
             return;
         }
 
-        // שמירת פריט ב-SharedPreferences
-        String itemData = itemName + " (" + category + ")";
-        sharedPreferencesManager.saveItem(itemData);
+        String id = databaseService.generateNewItemId();
+        Item item = new Item(id, itemName, category, ImageUtil.convertTo64Base(ivPreview));
+        databaseService.createNewItem(item, new DatabaseService.DatabaseCallback<Void>() {
+            @Override
+            public void onCompleted(Void object) {
+                // חזרה ל-MyClosetActivity
+                finish(); // לסגור את המסך הנוכחי
+            }
 
-        // הודעה למשתמש
-        Toast.makeText(this, "Item saved: " + itemData, Toast.LENGTH_SHORT).show();
+            @Override
+            public void onFailed(Exception e) {
 
-        // חזרה ל-MyClosetActivity
-        Intent intent = new Intent(addItem.this, MyClosetActivity.class);
-        startActivity(intent);
-        finish(); // לסגור את המסך הנוכחי
+            }
+        });
     }
 
     @Override

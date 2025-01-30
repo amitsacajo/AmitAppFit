@@ -12,16 +12,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.amitappfit.R;
+import com.example.amitappfit.model.Item;
 import com.example.amitappfit.screens.EditItemActivity;
+import com.example.amitappfit.util.ImageUtil;
 
 import java.util.List;
 
 public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder> {
 
-    private List<String> items;
-    private Context context; // נדרש כדי להפעיל Intents
+    private List<Item> items;
+    private final Context context; // נדרש כדי להפעיל Intents
 
-    public ClosetAdapter(List<String> items, Context context) {
+    public ClosetAdapter(List<Item> items, Context context) {
         this.items = items;
         this.context = context;
     }
@@ -38,11 +40,9 @@ public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // הצגת פריט ב-ViewHolder
-        String item = items.get(position);
-        holder.itemName.setText(item);
-
-        // אם יש לך תמונה או פרמטרים נוספים, ניתן להוסיף אותם כאן
-        // holder.itemImage.setImageResource(R.drawable.some_image);
+        Item item = items.get(position);
+        holder.itemName.setText(item.getTitle());
+        holder.itemImage.setImageBitmap(ImageUtil.convertFrom64base(item.getPicBase64()));
 
         // הגדרת Listener ללחיצה על פריט
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +50,7 @@ public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder
             public void onClick(View v) {
                 // פתיחת עמוד EditItemActivity עם המידע של הפריט שנבחר
                 Intent intent = new Intent(context, EditItemActivity.class);
-                intent.putExtra("itemData", item); // מעביר את המידע על הפריט לעמוד העריכה
+                intent.putExtra("itemData", item.getId()); // מעביר את המידע על הפריט לעמוד העריכה
                 context.startActivity(intent);
             }
         });
@@ -62,7 +62,7 @@ public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder
     }
 
     // פונקציה לעדכון רשימת הפריטים
-    public void updateItems(List<String> newItems) {
+    public void updateItems(List<Item> newItems) {
         this.items = newItems;
         notifyDataSetChanged(); // עדכון ה-RecyclerView
     }

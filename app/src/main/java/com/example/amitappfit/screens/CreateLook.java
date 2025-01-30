@@ -1,6 +1,7 @@
-/*
+
 package com.example.amitappfit.screens;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -18,6 +20,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.amitappfit.R;
+import com.example.amitappfit.adapters.ItemAdapter;
+import com.example.amitappfit.adapters.SpinnerItemAdapter;
 import com.example.amitappfit.model.Item;
 import com.example.amitappfit.model.SharedPreferencesManager;
 import com.example.amitappfit.model.Look;
@@ -33,10 +37,9 @@ public class CreateLook extends AppCompatActivity {
     private Spinner spinnerTops, spinnerBottoms, spinnerShoes;
     private Button btnSaveLook;
     private SharedPreferencesManager sharedPreferencesManager;
-    private List<String> allItems;
     DatabaseService databaseService;
 
-    int selectedButton;
+    List<Item> allItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +52,6 @@ public class CreateLook extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        selectedButton = -1;
-
         databaseService = DatabaseService.getInstance();
 
         // אתחול רכיבים
@@ -64,84 +64,32 @@ public class CreateLook extends AppCompatActivity {
         // אתחול SharedPreferencesManager
         sharedPreferencesManager = new SharedPreferencesManager(this);
 
-        // טעינת פריטים מתוך SharedPreferences
-        allItems = sharedPreferencesManager.getItems();
-
         // הגדרת ה-Spinners עם הפריטים
         setupSpinners();
 
         // שמירת הלוק
         btnSaveLook.setOnClickListener(v -> saveLook());
 
-        /// register the activity result launcher for selecting image from gallery
-        selectImageLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        ImageView iv;
-                        if (selectedButton == 1) {
-                            iv = ivTop;
-                        } else if (selectedButton == 2) {
-                            iv = ivBottom;
-                        } else if (selectedButton == 3) {
-                            iv = ivShoes;
-                        } else {
-                            return;
-                        }
-
-                        Uri selectedImage = result.getData().getData();
-                        iv.setImageURI(selectedImage);
-                        /// set the tag for the image view to null
-                        iv.setTag(null);
-                    }
-                });
-
-        /// register the activity result launcher for capturing image from camera
-        captureImageLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Bitmap bitmap = (Bitmap) result.getData().getExtras().get("data");
-                        ImageView iv;
-                        if (selectedButton == 1) {
-                            iv = ivTop;
-                        } else if (selectedButton == 2) {
-                            iv = ivBottom;
-                        } else if (selectedButton == 3) {
-                            iv = ivShoes;
-                        } else {
-                            return;
-                        }
-                        iv.setImageBitmap(bitmap);
-                        /// set the tag for the image view to null
-                        iv.setTag(null);
-                    }
-                });
-
     }
 
     private void setupSpinners() {
-        List<String> tops = filterItemsByCategory("Tops");
-        List<String> bottoms = filterItemsByCategory("Bottoms");
-        List<String> shoes = filterItemsByCategory("Shoes");
+        List<Item> tops = filterItemsByCategory("Tops");
+        List<Item> bottoms = filterItemsByCategory("Bottoms");
+        List<Item> shoes = filterItemsByCategory("Shoes");
 
-        ArrayAdapter<String> topsAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, tops);
-        ArrayAdapter<String> bottomsAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, bottoms);
-        ArrayAdapter<String> shoesAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, shoes);
-
-        topsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        bottomsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        shoesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        SpinnerItemAdapter topsAdapter = new SpinnerItemAdapter(this, android.R.layout.simple_spinner_item, tops);
+        SpinnerItemAdapter bottomsAdapter = new SpinnerItemAdapter(this, android.R.layout.simple_spinner_item, bottoms);
+        SpinnerItemAdapter shoesAdapter = new SpinnerItemAdapter(this, android.R.layout.simple_spinner_item, shoes);
 
         spinnerTops.setAdapter(topsAdapter);
         spinnerBottoms.setAdapter(bottomsAdapter);
         spinnerShoes.setAdapter(shoesAdapter);
     }
 
-    private List<String> filterItemsByCategory(String category) {
-        List<String> filteredItems = new ArrayList<>();
-        for (String item : allItems) {
-            if (item.contains(category)) {
+    private List<Item> filterItemsByCategory(String category) {
+        List<Item> filteredItems = new ArrayList<>();
+        for (Item item : allItems) {
+            if (item.getCategory().equals(category)) {
                 filteredItems.add(item);
             }
         }
@@ -161,14 +109,14 @@ public class CreateLook extends AppCompatActivity {
             return;
         }
 
-        String top = spinnerTops.getSelectedItem().toString();
-        String bottom = spinnerBottoms.getSelectedItem().toString();
-        String shoes = spinnerShoes.getSelectedItem().toString();
+        Item top = (Item) spinnerTops.getSelectedItem();
+        Item bottom = (Item) spinnerBottoms.getSelectedItem();
+        Item shoes = (Item) spinnerShoes.getSelectedItem();
 
         String id = databaseService.generateNewLookId();
 
         // יצירת לוק חדש
-        Look newLook = new Look(id, lookName, new Item(top, ImageUtil.convertTo64Base(ivTop)), new Item(bottom, null), new Item(shoes, null));
+        Look newLook = new Look(id, lookName, top, bottom, shoes);
 
         databaseService.createNewLook(newLook, new DatabaseService.DatabaseCallback<Void>() {
             @Override
@@ -191,4 +139,4 @@ public class CreateLook extends AppCompatActivity {
 
     }
 }
-*/
+

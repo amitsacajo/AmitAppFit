@@ -4,7 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.amitappfit.model.ClosetItem;
+import com.example.amitappfit.model.Item;
 import com.example.amitappfit.model.Look;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -101,20 +101,25 @@ public class DatabaseService {
         });
     }
 
-    public void createNewClosetItem(@NotNull final ClosetItem item, @Nullable final DatabaseCallback<Void> callback) {
-        writeData("closetItems/" + item.getName(), item, callback);
+
+    public String generateNewItemId() {
+        return generateNewId("Items");
     }
 
-    public void getClosetItem(@NotNull final String itemName, @NotNull final DatabaseCallback<ClosetItem> callback) {
-        getData("closetItems/" + itemName, ClosetItem.class, callback);
+    public void createNewItem(@NotNull final Item item, @Nullable final DatabaseCallback<Void> callback) {
+        writeData("Items/" + item.getTitle(), item, callback);
     }
 
-    public void getClosetItemList(@NotNull final DatabaseCallback<List<ClosetItem>> callback) {
-        getDataList("closetItems", ClosetItem.class, new HashMap<>(), callback);
+    public void getItem(@NotNull final String itemName, @NotNull final DatabaseCallback<Item> callback) {
+        getData("Items/" + itemName, Item.class, callback);
     }
 
-    public void deleteClosetItem(@NotNull final String itemName, @Nullable final DatabaseCallback<Void> callback) {
-        deleteData("closetItems/" + itemName, callback);
+    public void getItemList(@NotNull final DatabaseCallback<List<Item>> callback) {
+        getDataList("Items", Item.class, new HashMap<>(), callback);
+    }
+
+    public void deleteItem(@NotNull final String itemName, @Nullable final DatabaseCallback<Void> callback) {
+        deleteData("Items/" + itemName, callback);
     }
 
     public String generateNewLookId() {

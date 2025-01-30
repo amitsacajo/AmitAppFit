@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.amitappfit.R;
 import com.example.amitappfit.model.SharedPreferencesManager;
+import com.example.amitappfit.services.DatabaseService;
 import com.example.amitappfit.util.ImageUtil;
 
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ public class EditItemActivity extends AppCompatActivity implements View.OnClickL
     private Button btnDeleteItem;
     private ImageView ivPreview;
     private SharedPreferencesManager sharedPreferencesManager;
+
+    DatabaseService databaseService;
 
     private String originalItemData;
 

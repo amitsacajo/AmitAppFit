@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.amitappfit.R;
 import com.example.amitappfit.adapters.ClosetAdapter;
+import com.example.amitappfit.model.Item;
 import com.example.amitappfit.model.SharedPreferencesManager;
+import com.example.amitappfit.services.DatabaseService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +28,16 @@ public class MyClosetActivity extends AppCompatActivity {
     private Spinner spinnerCategories; // Spinner לבחירת קטגוריה
     private RecyclerView rvClosetItems; // RecyclerView להצגת הפריטים
     private ClosetAdapter adapter; // מחלקת האדפטר
-    private SharedPreferencesManager sharedPreferencesManager; // מנהל SharedPreferences
+
+    List<Item> allItems = new ArrayList<>();
+    DatabaseService databaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_closet); // מחבר את ה-XML למחלקה
+
+        databaseService = DatabaseService.getInstance();
 
         // אתחול רכיבים מה-XML
         btnAddItem = findViewById(R.id.btnAddItem);
@@ -39,9 +45,6 @@ public class MyClosetActivity extends AppCompatActivity {
         rvClosetItems = findViewById(R.id.rvClosetItems);
         btnCreateLook = findViewById(R.id.btnCreateLook);
         btnYourSavedLooks = findViewById(R.id.btnYourSavedLooks); // אתחול כפתור ה- "Your Saved Looks"
-
-        // אתחול SharedPreferencesManager
-        sharedPreferencesManager = new SharedPreferencesManager(this);
 
         // הגדרת RecyclerView
         // הגדרת RecyclerView
@@ -113,25 +116,38 @@ public class MyClosetActivity extends AppCompatActivity {
         spinnerCategories.setAdapter(adapter);
     }
 
+
+
+
     // טעינת הפריטים מתוך SharedPreferences
     private void loadItems() {
-        List<String> items = sharedPreferencesManager.getItems();
-        adapter.updateItems(items); // מעדכן את האדפטר עם הפריטים
+        databaseService.getItemList(new DatabaseService.DatabaseCallback<List<Item>>() {
+            @Override
+            public void onCompleted(List<Item> items) {
+                allItems.clear();
+                allItems.addAll(items);
+                adapter.updateItems(allItems);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
     }
 
     // סינון פריטים לפי קטגוריה
     private void filterItemsByCategory() {
         String selectedCategory = spinnerCategories.getSelectedItem().toString();
-        List<String> allItems = sharedPreferencesManager.getItems();
-        List<String> filteredItems = new ArrayList<>();
 
+        List<Item> filteredItems = new ArrayList<>();
         // אם נבחרה קטגוריית "All Items", הצג את כל הפריטים
         if (selectedCategory.equals("All Items")) {
             filteredItems.addAll(allItems);
         } else {
             // סינון פריטים לפי קטגוריה
-            for (String item : allItems) {
-                if (item.contains(selectedCategory)) {
+            for (Item item : allItems) {
+                if (item.getCategory().equals(selectedCategory)) {
                     filteredItems.add(item);
                 }
             }
