@@ -19,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.amitappfit.R;
+import com.example.amitappfit.model.Item;
 import com.example.amitappfit.model.SharedPreferencesManager;
 import com.example.amitappfit.services.DatabaseService;
 import com.example.amitappfit.util.ImageUtil;
@@ -33,11 +34,9 @@ public class EditItemActivity extends AppCompatActivity implements View.OnClickL
     private Button btnSaveChanges;
     private Button btnDeleteItem;
     private ImageView ivPreview;
-    private SharedPreferencesManager sharedPreferencesManager;
-
     DatabaseService databaseService;
 
-    private String originalItemData;
+    private String itemId;
 
     /// Activity result launcher for selecting image from gallery
     private ActivityResultLauncher<Intent> selectImageLauncher;
@@ -49,6 +48,8 @@ public class EditItemActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
 
+        databaseService = DatabaseService.getInstance();
+
         ImageUtil.requestPermission(this);
 
         etItemName = findViewById(R.id.etItemName);
@@ -57,17 +58,29 @@ public class EditItemActivity extends AppCompatActivity implements View.OnClickL
         btnDeleteItem = findViewById(R.id.btnDeleteItem);
         ivPreview = findViewById(R.id.ivPreview);
 
-        sharedPreferencesManager = new SharedPreferencesManager(this);
 
         // קבלת נתוני הפריט שנבחר
         Intent intent = getIntent();
-        originalItemData = intent.getStringExtra("itemData");
-        if (originalItemData != null) {
-            String[] itemParts = originalItemData.split(" \\(");
-            etItemName.setText(itemParts[0]);
-            String category = itemParts[1].replace(")", "");
-            setupCategorySpinner(category);
+        itemId = intent.getStringExtra("item_id");
+
+        if (itemId == null) {
+            finish();
+            return;
         }
+
+        databaseService.getItem(itemId, new DatabaseService.DatabaseCallback<Item>() {
+            @Override
+            public void onCompleted(Item item) {
+                etItemName.setText(item.getTitle());
+                setupCategorySpinner(item.getCategory());
+                ivPreview.setImageBitmap(ImageUtil.convertFrom64base(item.getPicBase64()));
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
 
         // שמירת השינויים
         btnSaveChanges.setOnClickListener(v -> saveChanges());
@@ -127,23 +140,47 @@ public class EditItemActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
-        String updatedItemData = updatedItemName + " (" + updatedCategory + ")";
-        sharedPreferencesManager.updateItem(originalItemData, updatedItemData);
+        // use database service
+        Item item = new Item(itemId, updatedItemName, updatedCategory, ImageUtil.convertTo64Base(ivPreview));
 
-        Toast.makeText(this, "Item updated successfully", Toast.LENGTH_SHORT).show();
+        databaseService.createNewItem(item, new DatabaseService.DatabaseCallback<Void>() {
+            @Override
+            public void onCompleted(Void object) {
+                Toast.makeText(getApplicationContext(),
+                        "Item updated successfully", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(EditItemActivity.this, MyClosetActivity.class);
-        startActivity(intent);
-        finish();
+                Intent intent = new Intent(EditItemActivity.this, MyClosetActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
+
+
     }
 
     private void deleteItem() {
-        sharedPreferencesManager.deleteItem(originalItemData);
-        Toast.makeText(this, "Item deleted successfully", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(EditItemActivity.this, MyClosetActivity.class);
-        startActivity(intent);
-        finish();
+        databaseService.deleteItem(itemId, new DatabaseService.DatabaseCallback<Void>() {
+            @Override
+            public void onCompleted(Void object) {
+                Toast.makeText(getApplicationContext(),
+                        "Item deleted successfully", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(EditItemActivity.this, MyClosetActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
     }
 
     @Override

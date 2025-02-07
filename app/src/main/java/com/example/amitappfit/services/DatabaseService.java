@@ -107,19 +107,19 @@ public class DatabaseService {
     }
 
     public void createNewItem(@NotNull final Item item, @Nullable final DatabaseCallback<Void> callback) {
-        writeData("Items/" + item.getTitle(), item, callback);
+        writeData("Items/" + item.getId(), item, callback);
     }
 
-    public void getItem(@NotNull final String itemName, @NotNull final DatabaseCallback<Item> callback) {
-        getData("Items/" + itemName, Item.class, callback);
+    public void getItem(@NotNull final String itemId, @NotNull final DatabaseCallback<Item> callback) {
+        getData("Items/" + itemId, Item.class, callback);
     }
 
     public void getItemList(@NotNull final DatabaseCallback<List<Item>> callback) {
         getDataList("Items", Item.class, new HashMap<>(), callback);
     }
 
-    public void deleteItem(@NotNull final String itemName, @Nullable final DatabaseCallback<Void> callback) {
-        deleteData("Items/" + itemName, callback);
+    public void deleteItem(@NotNull final String itemId, @Nullable final DatabaseCallback<Void> callback) {
+        deleteData("Items/" + itemId, callback);
     }
 
     public String generateNewLookId() {

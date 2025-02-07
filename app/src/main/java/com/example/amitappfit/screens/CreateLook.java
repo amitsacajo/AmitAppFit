@@ -36,7 +36,6 @@ public class CreateLook extends AppCompatActivity {
     private EditText etLookName;
     private Spinner spinnerTops, spinnerBottoms, spinnerShoes;
     private Button btnSaveLook;
-    private SharedPreferencesManager sharedPreferencesManager;
     DatabaseService databaseService;
 
     List<Item> allItems = new ArrayList<>();
@@ -61,11 +60,22 @@ public class CreateLook extends AppCompatActivity {
         spinnerShoes = findViewById(R.id.spinnerShoes);
         btnSaveLook = findViewById(R.id.btnSaveLook);
 
-        // אתחול SharedPreferencesManager
-        sharedPreferencesManager = new SharedPreferencesManager(this);
-
         // הגדרת ה-Spinners עם הפריטים
-        setupSpinners();
+
+        databaseService.getItemList(new DatabaseService.DatabaseCallback<List<Item>>() {
+            @Override
+            public void onCompleted(List<Item> items) {
+                allItems = items;
+                setupSpinners();
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
+
+
 
         // שמירת הלוק
         btnSaveLook.setOnClickListener(v -> saveLook());
@@ -121,9 +131,6 @@ public class CreateLook extends AppCompatActivity {
         databaseService.createNewLook(newLook, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public void onCompleted(Void object) {
-                // שמירת הלוק ב-SharedPreferences
-                sharedPreferencesManager.saveLook(lookName, newLook);
-
                 Toast.makeText(getApplicationContext(), "Look \"" + lookName + "\" saved successfully!", Toast.LENGTH_SHORT).show();
 
                 // חזרה לעמוד הקודם

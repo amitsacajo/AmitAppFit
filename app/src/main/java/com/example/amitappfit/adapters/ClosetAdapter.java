@@ -50,7 +50,7 @@ public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder
             public void onClick(View v) {
                 // פתיחת עמוד EditItemActivity עם המידע של הפריט שנבחר
                 Intent intent = new Intent(context, EditItemActivity.class);
-                intent.putExtra("itemData", item.getId()); // מעביר את המידע על הפריט לעמוד העריכה
+                intent.putExtra("item_id", item.getId()); // מעביר את המידע על הפריט לעמוד העריכה
                 context.startActivity(intent);
             }
         });

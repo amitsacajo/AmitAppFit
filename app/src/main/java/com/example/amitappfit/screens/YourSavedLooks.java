@@ -9,6 +9,8 @@ import com.example.amitappfit.R;
 import com.example.amitappfit.adapters.LookAdapter;
 import com.example.amitappfit.model.Look;
 import com.example.amitappfit.model.SharedPreferencesManager;
+import com.example.amitappfit.services.DatabaseService;
+
 import java.util.List;
 
 public class YourSavedLooks extends AppCompatActivity {
@@ -16,6 +18,9 @@ public class YourSavedLooks extends AppCompatActivity {
     private RecyclerView rvSavedLooks;
     private SharedPreferencesManager sharedPreferencesManager;
     private List<Look> savedLooks;
+
+    DatabaseService databaseService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
