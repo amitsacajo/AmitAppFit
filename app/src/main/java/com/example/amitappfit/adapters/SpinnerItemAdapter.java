@@ -29,24 +29,6 @@ public class SpinnerItemAdapter extends ArrayAdapter<Item> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        if (convertView == null) {
-            convertView = inflater.inflate(resource, parent, false);
-        }
-
-        Item item = getItem(position);
-        if (item == null) {
-            return convertView;
-        }
-
-        // שימוש בשם השדה הנכון
-        TextView textView = convertView.findViewById(android.R.id.text1);
-        textView.setText(item.getTitle());
-
-        return convertView;
-    }
-
-    @Override
     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_layout, parent, false);
@@ -55,12 +37,15 @@ public class SpinnerItemAdapter extends ArrayAdapter<Item> {
         Item item = getItem(position);
         if (item == null) return convertView;
 
+        // הצגת שם הפריט
         TextView textView = convertView.findViewById(R.id.tvItem);
         textView.setText(item.getTitle());
 
+        // הצגת התמונה באמצעות Bitmap מ-Base64
         ImageView imageView = convertView.findViewById(R.id.item_image_view);
         imageView.setImageBitmap(ImageUtil.convertFrom64base(item.getPicBase64()));
 
         return convertView;
     }
+
 }

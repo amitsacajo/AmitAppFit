@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 public class Look {
     private String id;
-
     private String name;
     private Item top;
     private Item bottom;
