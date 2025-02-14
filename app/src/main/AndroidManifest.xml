@@ -22,6 +22,12 @@
         android:theme="@style/Theme.AmitAppFit"
         tools:targetApi="31">
         <activity
+            android:name=".AdminMainPage"
+            android:exported="false" />
+        <activity
+            android:name=".screens.EditLook"
+            android:exported="false" />
+        <activity
             android:name=".screens.edit_look"
             android:exported="false" />
         <activity

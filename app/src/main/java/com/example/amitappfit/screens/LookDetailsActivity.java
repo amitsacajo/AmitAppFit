@@ -3,6 +3,7 @@ package com.example.amitappfit.screens;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,9 +20,9 @@ public class LookDetailsActivity extends AppCompatActivity {
 
     private TextView tvLookName, tvTop, tvBottom, tvShoes;
     private ImageView imgTop, imgBottom, imgShoes;
-    private Button btnDeleteLook;
-
+    private Button btnDeleteLook, btnChangeLook;
     DatabaseService databaseService;
+    String lookId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +39,13 @@ public class LookDetailsActivity extends AppCompatActivity {
         imgTop = findViewById(R.id.imgTop);
         imgBottom = findViewById(R.id.imgBottom);
         imgShoes = findViewById(R.id.imgShoes);
+
         btnDeleteLook = findViewById(R.id.btnDeleteLook);
+        btnChangeLook = findViewById(R.id.btnChangeLook);
 
         // קבלת הנתונים מה-Intent
         Intent intent = getIntent();
-        String lookId = intent.getStringExtra("look_id");
+        lookId = intent.getStringExtra("look_id");
 
         // קריאה למסד הנתונים לקבלת פרטי הלוק
         databaseService.getLook(lookId, new DatabaseService.DatabaseCallback<Look>() {
@@ -69,6 +72,10 @@ public class LookDetailsActivity extends AppCompatActivity {
 
         // הגדרת לחיצה על כפתור מחיקה
         btnDeleteLook.setOnClickListener(v -> deleteLook(lookId)); // מחיקת הלוק
+
+
+
+
     }
 
     // פונקציה למחיקת הלוק
@@ -90,5 +97,13 @@ public class LookDetailsActivity extends AppCompatActivity {
                 // טיפול בשגיאות
             }
         });
+    }
+
+    public void onClick(View view) {
+        Intent intent = new Intent(LookDetailsActivity.this, EditLook.class);
+        intent.putExtra("LOOK_ID", lookId);
+        startActivity(intent);
+
+
     }
 }

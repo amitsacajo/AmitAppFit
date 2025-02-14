@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#98C2DD"
@@ -13,78 +14,105 @@
         android:layout_height="wrap_content"
         android:text="Look Name"
         android:textColor="#A758B8"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="26sp"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="56dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tvTop"
+        android:layout_marginBottom="20dp"/>
 
     <!-- פרטי החולצה -->
     <TextView
         android:id="@+id/tvTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Top: "
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Top:"
+        android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@id/tvLookName"
-        android:layout_marginTop="40dp"/> <!-- הגדלתי את המרווח בין כותרת הלוק לחולצה -->
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"/>
 
     <ImageView
         android:id="@+id/imgTop"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:layout_constraintStart_toEndOf="@id/tvTop"
-        app:layout_constraintTop_toTopOf="@id/tvTop"
+        android:layout_width="64dp"
+        android:layout_height="90dp"
         app:srcCompat="@drawable/hangerone"
-        android:layout_marginStart="24dp"/> <!-- הוספתי מרווח בין התמונה לטקסט -->
+        app:layout_constraintTop_toBottomOf="@id/tvLookName"
+        app:layout_constraintStart_toEndOf="@id/tvTop"
+        android:layout_marginStart="16dp"/>
 
     <!-- פרטי המכנסיים -->
     <TextView
         android:id="@+id/tvBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bottom: "
+        android:text="Bottom:"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/imgTop"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTop"
-        android:layout_marginTop="48dp"/> <!-- הגדלתי את המרווח בין החולצה למכנסיים -->
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"/>
 
     <ImageView
         android:id="@+id/imgBottom"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:layout_constraintStart_toEndOf="@id/tvBottom"
-        app:layout_constraintTop_toTopOf="@id/tvBottom"
+        android:layout_width="64dp"
+        android:layout_height="90dp"
         app:srcCompat="@drawable/hangerone"
-        android:layout_marginStart="24dp"/> <!-- הוספתי מרווח בין התמונה לטקסט -->
+        app:layout_constraintTop_toBottomOf="@id/imgTop"
+        app:layout_constraintStart_toEndOf="@id/tvBottom"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"/>
 
     <!-- פרטי הנעליים -->
     <TextView
         android:id="@+id/tvShoes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Shoes: "
+        android:text="Shoes:"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/imgBottom"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvBottom"
-        android:layout_marginTop="48dp"/> <!-- הגדלתי את המרווח בין המכנסיים לנעליים -->
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"/>
 
     <ImageView
         android:id="@+id/imgShoes"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:layout_constraintStart_toEndOf="@id/tvShoes"
-        app:layout_constraintTop_toTopOf="@id/tvShoes"
+        android:layout_width="64dp"
+        android:layout_height="90dp"
         app:srcCompat="@drawable/hangerone"
-        android:layout_marginStart="24dp"/> <!-- הוספתי מרווח בין התמונה לטקסט -->
+        app:layout_constraintTop_toBottomOf="@id/imgBottom"
+        app:layout_constraintStart_toEndOf="@id/tvShoes"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"/>
 
     <!-- כפתור מחיקת לוק -->
     <Button
         android:id="@+id/btnDeleteLook"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Delete Look"
-        app:layout_constraintTop_toBottomOf="@id/tvShoes"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#F4A8A8"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@id/imgShoes"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnChangeLook"
+        android:layout_marginEnd="8dp"/>
+
+    <!-- כפתור שינוי לוק -->
+    <Button
+        android:id="@+id/btnChangeLook"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Change Look"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#A8D8F4"
+        android:onClick="onClick"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@id/imgShoes"
+        app:layout_constraintStart_toEndOf="@id/btnDeleteLook"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="64dp"/> <!-- הגדלתי את המרווח בין הנעליים לכפתור מחיקת הלוק -->
+        android:layout_marginStart="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

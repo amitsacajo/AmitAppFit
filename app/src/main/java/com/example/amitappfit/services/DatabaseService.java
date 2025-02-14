@@ -110,6 +110,11 @@ public class DatabaseService {
         writeData("Items/" + item.getId(), item, callback);
     }
 
+    public void updateLook(@NotNull final Look look, @Nullable final DatabaseCallback<Void> callback) {
+        writeData("looks/" + look.getId(), look, callback);
+    }
+
+
     public void getItem(@NotNull final String itemId, @NotNull final DatabaseCallback<Item> callback) {
         getData("Items/" + itemId, Item.class, callback);
     }
