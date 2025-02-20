@@ -33,7 +33,6 @@
                 android:layout_marginBottom="32dp" />
 
             <!-- כפתור הוספת פריט -->
-
             <Button
                 android:id="@+id/btnAddItem"
                 android:layout_width="wrap_content"
@@ -92,4 +91,18 @@
         </LinearLayout>
     </android.widget.ScrollView>
 
+    <!-- כפתור התנתקות בצד ימין למעלה -->
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:backgroundTint="#F3A395"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

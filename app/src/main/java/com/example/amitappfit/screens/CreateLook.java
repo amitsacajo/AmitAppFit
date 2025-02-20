@@ -1,32 +1,22 @@
 
 package com.example.amitappfit.screens;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.amitappfit.R;
-import com.example.amitappfit.adapters.ItemAdapter;
 import com.example.amitappfit.adapters.SpinnerItemAdapter;
 import com.example.amitappfit.model.Item;
-import com.example.amitappfit.model.SharedPreferencesManager;
 import com.example.amitappfit.model.Look;
 import com.example.amitappfit.services.DatabaseService;
-import com.example.amitappfit.util.ImageUtil;
 
 import java.util.ArrayList;
 import java.util.List;

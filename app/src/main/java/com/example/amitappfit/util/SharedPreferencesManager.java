@@ -1,4 +1,4 @@
-package com.example.amitappfit.model;
+package com.example.amitappfit.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

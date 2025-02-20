@@ -87,7 +87,7 @@ public class LookDetailsActivity extends AppCompatActivity {
                 Toast.makeText(LookDetailsActivity.this, "Look deleted successfully", Toast.LENGTH_SHORT).show();
 
                 // חזרה למסך הראשי או כל מסך אחר
-                Intent intent = new Intent(LookDetailsActivity.this, MyClosetActivity.class);
+                Intent intent = new Intent(LookDetailsActivity.this, YourSavedLooks.class);
                 startActivity(intent);
                 finish();
             }

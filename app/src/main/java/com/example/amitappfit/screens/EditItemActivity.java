@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.amitappfit.R;
 import com.example.amitappfit.model.Item;
-import com.example.amitappfit.model.SharedPreferencesManager;
 import com.example.amitappfit.services.DatabaseService;
 import com.example.amitappfit.util.ImageUtil;
 

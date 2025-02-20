@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 import android.widget.AdapterView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.amitappfit.R;
 import com.example.amitappfit.adapters.ClosetAdapter;
 import com.example.amitappfit.model.Item;
-import com.example.amitappfit.model.SharedPreferencesManager;
 import com.example.amitappfit.services.DatabaseService;
 
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ import java.util.List;
 
 public class MyClosetActivity extends AppCompatActivity {
 
-    private Button btnAddItem, btnCreateLook, btnYourSavedLooks; // הוספת כפתור "Your Saved Looks"
+    private Button btnAddItem, btnCreateLook, btnYourSavedLooks, btnLogout; // הוספת כפתור "Logout"
     private Spinner spinnerCategories; // Spinner לבחירת קטגוריה
     private RecyclerView rvClosetItems; // RecyclerView להצגת הפריטים
     private ClosetAdapter adapter; // מחלקת האדפטר
@@ -45,13 +43,12 @@ public class MyClosetActivity extends AppCompatActivity {
         rvClosetItems = findViewById(R.id.rvClosetItems);
         btnCreateLook = findViewById(R.id.btnCreateLook);
         btnYourSavedLooks = findViewById(R.id.btnYourSavedLooks); // אתחול כפתור ה- "Your Saved Looks"
+        btnLogout = findViewById(R.id.btnLogout); // אתחול כפתור התנתקות
 
-        // הגדרת RecyclerView
         // הגדרת RecyclerView
         rvClosetItems.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ClosetAdapter(new ArrayList<>(), this);
         rvClosetItems.setAdapter(adapter);
-
 
         // הגדרת Spinner עם קטגוריות
         setupCategorySpinner();
@@ -89,6 +86,18 @@ public class MyClosetActivity extends AppCompatActivity {
             }
         });
 
+        // לחיצה על כפתור "Logout"
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // לדוגמה, פעולת התנתקות
+                // כאן תוכל להוסיף את הקוד שלך על מנת להתנתק (למשל, מחיקת נתונים מ-SharedPreferences)
+                // Intent intent = new Intent(MyClosetActivity.this, LoginActivity.class);
+                // startActivity(intent);
+                // finish(); // סיום הפעילות הנוכחית
+            }
+        });
+
         // פעולה בעת שינוי ב-Spinner של הקטגוריה
         spinnerCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -116,9 +125,6 @@ public class MyClosetActivity extends AppCompatActivity {
         spinnerCategories.setAdapter(adapter);
     }
 
-
-
-
     // טעינת הפריטים מתוך SharedPreferences
     private void loadItems() {
         databaseService.getItemList(new DatabaseService.DatabaseCallback<List<Item>>() {
@@ -131,7 +137,7 @@ public class MyClosetActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-
+                // טיפול בשגיאות במקרה של כשלון
             }
         });
     }
@@ -157,4 +163,3 @@ public class MyClosetActivity extends AppCompatActivity {
         adapter.updateItems(filteredItems);
     }
 }
-
