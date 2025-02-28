@@ -7,6 +7,8 @@ public class User {
     String phone;
     String email;
     String password;
+    private boolean isAdmin;
+
 
 
     public User(String id, String fName, String lName, String phone, String email, String password) {
@@ -16,6 +18,8 @@ public class User {
         this.phone = phone;
         this.email = email;
         this.password = password;
+        this.isAdmin = isAdmin;
+
     }
 
     public User() {
@@ -84,6 +88,15 @@ public class User {
     }
 
 
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+
     @Override
     public String toString() {
         return "User{" +
@@ -93,6 +106,7 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", isAdmin=" + isAdmin +
                 '}';
     }
 

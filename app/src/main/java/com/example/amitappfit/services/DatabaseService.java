@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 
 import com.example.amitappfit.model.Item;
 import com.example.amitappfit.model.Look;
+import com.example.amitappfit.model.User;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -102,6 +103,8 @@ public class DatabaseService {
     }
 
 
+
+
     public String generateNewItemId() {
         return generateNewId("Items");
     }
@@ -151,4 +154,25 @@ public class DatabaseService {
         void onCompleted(T object);
         void onFailed(Exception e);
     }
+
+    public void createNewUser(@NotNull final User user, @Nullable final DatabaseCallback<Void> callback) {
+        writeData("users/" + user.getId(), user, callback);
+    }
+
+    public void getUser(@NotNull final String uid, @NotNull final DatabaseCallback<User> callback) {
+        getData("users/" + uid, User.class, callback);
+    }
+
+    public void getUserList(@NotNull final DatabaseCallback<List<User>> callback) {
+        getDataList("users", User.class, new HashMap<>(), callback);
+    }
+
+    public void deleteUser(@NotNull final String id, @Nullable final DatabaseCallback<Void> callback) {
+        deleteData("users/" + id, callback);
+    }
+
+
+
+
+
 }
