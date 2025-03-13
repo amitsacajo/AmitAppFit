@@ -1,7 +1,5 @@
 package com.example.amitappfit.model;
 
-import androidx.annotation.NonNull;
-
 public class Item {
 
     private String id;
@@ -11,6 +9,8 @@ public class Item {
 
     public Item() {
     }
+
+
 
     public Item(String id, String title, String category, String picBase64) {
         this.id = id;

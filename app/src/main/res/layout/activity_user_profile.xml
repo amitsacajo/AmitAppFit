@@ -143,6 +143,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Edit Profile"
+        android:backgroundTint="#FFB6C1"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_user_password" />

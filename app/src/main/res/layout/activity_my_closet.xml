@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4D1D1    "
+    android:background="#F4D1D1"
     tools:context=".screens.MyClosetActivity">
 
     <!-- ScrollView שמאפשר גלילה -->
@@ -91,18 +91,19 @@
         </LinearLayout>
     </android.widget.ScrollView>
 
-    <!-- כפתור התנתקות בצד ימין למעלה -->
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Logout"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:backgroundTint="#F3A395"
-        android:padding="10dp"
+    <!-- כפתור פרופיל בצד ימין למעלה עם אייקון -->
+    <ImageButton
+        android:id="@+id/btnProfile"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/person"
+        android:contentDescription="Profile"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

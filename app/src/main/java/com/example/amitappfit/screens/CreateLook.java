@@ -1,6 +1,6 @@
-
 package com.example.amitappfit.screens;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -103,7 +103,6 @@ public class CreateLook extends AppCompatActivity {
             return;
         }
 
-        // אם לא נוספו פריטים לקטגוריה של חולצות, נציג הודעה למשתמש
         if (spinnerTops.getAdapter() == null || spinnerTops.getAdapter().getCount() == 0) {
             Toast.makeText(this, "Please add items to Tops category first", Toast.LENGTH_SHORT).show();
             return;
@@ -115,7 +114,6 @@ public class CreateLook extends AppCompatActivity {
 
         String id = databaseService.generateNewLookId();
 
-        // יצירת לוק חדש
         Look newLook = new Look(id, lookName, top, bottom, shoes);
 
         databaseService.createNewLook(newLook, new DatabaseService.DatabaseCallback<Void>() {
@@ -123,17 +121,17 @@ public class CreateLook extends AppCompatActivity {
             public void onCompleted(Void object) {
                 Toast.makeText(getApplicationContext(), "Look \"" + lookName + "\" saved successfully!", Toast.LENGTH_SHORT).show();
 
-                // חזרה לעמוד הקודם
+                // מעבר לעמוד הלוקים השמורים
+                Intent intent = new Intent(CreateLook.this, YourSavedLooks.class);
+                startActivity(intent);
                 finish();
             }
 
             @Override
             public void onFailed(Exception e) {
-
+                Toast.makeText(getApplicationContext(), "Failed to save look. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
-}
 
+}

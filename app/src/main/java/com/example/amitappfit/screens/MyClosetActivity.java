@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.AdapterView;
 
@@ -22,10 +23,11 @@ import java.util.List;
 
 public class MyClosetActivity extends AppCompatActivity {
 
-    private Button btnAddItem, btnCreateLook, btnYourSavedLooks, btnLogout; // הוספת כפתור "Logout"
+    private Button btnAddItem, btnCreateLook, btnYourSavedLooks; //
     private Spinner spinnerCategories; // Spinner לבחירת קטגוריה
     private RecyclerView rvClosetItems; // RecyclerView להצגת הפריטים
     private ClosetAdapter adapter; // מחלקת האדפטר
+    private ImageButton btnProfile ;
 
     List<Item> allItems = new ArrayList<>();
     DatabaseService databaseService;
@@ -43,7 +45,8 @@ public class MyClosetActivity extends AppCompatActivity {
         rvClosetItems = findViewById(R.id.rvClosetItems);
         btnCreateLook = findViewById(R.id.btnCreateLook);
         btnYourSavedLooks = findViewById(R.id.btnYourSavedLooks); // אתחול כפתור ה- "Your Saved Looks"
-        btnLogout = findViewById(R.id.btnLogout); // אתחול כפתור התנתקות
+        btnProfile = findViewById(R.id.btnProfile);
+
 
         // הגדרת RecyclerView
         rvClosetItems.setLayoutManager(new LinearLayoutManager(this));
@@ -86,17 +89,15 @@ public class MyClosetActivity extends AppCompatActivity {
             }
         });
 
-        // לחיצה על כפתור "Logout"
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+        btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // לדוגמה, פעולת התנתקות
-                // כאן תוכל להוסיף את הקוד שלך על מנת להתנתק (למשל, מחיקת נתונים מ-SharedPreferences)
-                // Intent intent = new Intent(MyClosetActivity.this, LoginActivity.class);
-                // startActivity(intent);
-                // finish(); // סיום הפעילות הנוכחית
+                Intent intent = new Intent(MyClosetActivity.this, UserProfileActivity.class);
+                startActivity(intent);
             }
         });
+
+
 
         // פעולה בעת שינוי ב-Spinner של הקטגוריה
         spinnerCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
