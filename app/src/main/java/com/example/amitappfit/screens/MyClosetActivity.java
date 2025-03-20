@@ -48,6 +48,7 @@ public class MyClosetActivity extends AppCompatActivity {
         btnProfile = findViewById(R.id.btnProfile);
 
 
+
         // הגדרת RecyclerView
         rvClosetItems.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ClosetAdapter(new ArrayList<>(), this);

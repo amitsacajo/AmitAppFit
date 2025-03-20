@@ -16,22 +16,18 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.amitappfit.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.amitappfit.model.User;
+import com.example.amitappfit.services.AuthenticationService;
+import com.example.amitappfit.services.DatabaseService;
+import com.example.amitappfit.util.SharedPreferencesUtil;
 
 public class LogIn extends AppCompatActivity implements View.OnClickListener {
 
     EditText etEmail, etPassword;
     Button btnLog, btnSignUp;
     String email, pass;
-    FirebaseDatabase database;
-    DatabaseReference myRef;
-    private FirebaseAuth mAuth;
+    AuthenticationService authenticationService;
+    DatabaseService databaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +40,8 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
             return insets;
         });
 
+        authenticationService = AuthenticationService.getInstance();
+        databaseService = DatabaseService.getInstance();
         initViews();
     }
 
@@ -54,9 +52,6 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
         btnSignUp = findViewById(R.id.btnSignUp); // כפתור להרשמה
         btnLog.setOnClickListener(this);
         btnSignUp.setOnClickListener(this); // מאזין ללחיצה על כפתור ההרשמה
-        mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("Users");
     }
 
     @Override
@@ -65,46 +60,36 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
             email = etEmail.getText().toString();
             pass = etPassword.getText().toString();
 
-            mAuth.signInWithEmailAndPassword(email, pass)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            authenticationService.signIn(email, pass, new AuthenticationService.AuthCallback() {
+                @Override
+                public void onCompleted(String uid) {
+                    databaseService.getUser(uid, new DatabaseService.DatabaseCallback<User>() {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // התחברות מוצלחת
-                                Log.d("TAG", "signInWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
+                        public void onCompleted(User user) {
+                            SharedPreferencesUtil.saveUser(getApplicationContext(), user);
+                            Intent go = new Intent(getApplicationContext(), MyClosetActivity.class);
+                            startActivity(go);
+                            finish();
+                        }
 
-                                if (user != null) {
-                                    String userId = user.getUid();  // זיהוי המשתמש באמצעות ה-UID
-
-                                    // כאן אפשר לשלוף או להוסיף נתונים אישיים של המשתמש
-                                    myRef.child(userId).get().addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            // נתוני המשתמש נמצאים כאן
-                                            Log.d("TAG", "User data: " + task1.getResult().getValue());
-                                        } else {
-                                            // במקרה של כשלון בשליפת הנתונים
-                                            Log.w("TAG", "Failed to read user data", task1.getException());
-                                        }
-                                    });
-
-                                    // שמירת נתונים של המשתמש לדוגמה, למשל שם:
-                                    DatabaseReference userRef = myRef.child(userId);
-                                    userRef.child("username").setValue("Amit");  // שמירת שם המשתמש או נתון אחר
-
-                                    // מעבר לעמוד הראשי (MyClosetActivity)
-                                    Intent go = new Intent(getApplicationContext(), MyClosetActivity.class);
-                                    startActivity(go);
-                                    finish(); // סוגר את מסך ההתחברות
-                                }
-                            } else {
-                                // במקרה של כשלון
-                                Log.w("TAG", "signInWithEmail:failure", task.getException());
-                                Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                        @Override
+                        public void onFailed(Exception e) {
+                            Log.w("TAG", "getUser:failure", e);
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+                    Log.w("TAG", "signInWithEmail:failure", e);
+                    Toast.makeText(getApplicationContext(), "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
         } else if (v.getId() == R.id.btnSignUp) {
             // מעבר לעמוד ההרשמה
             Intent registerIntent = new Intent(getApplicationContext(), Register.class);

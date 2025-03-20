@@ -19,41 +19,28 @@ import android.widget.Toast;
 
 import com.example.amitappfit.R;
 import com.example.amitappfit.model.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.amitappfit.services.AuthenticationService;
+import com.example.amitappfit.services.DatabaseService;
+import com.example.amitappfit.util.SharedPreferencesUtil;
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
     EditText etFname, etLname, etPhone, etEmail, etPassword;
     Button btnReg;
-    TextView tvReg;
-
     String fName,lName, phone, email, pass;
-    private FirebaseAuth mAuth;
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
-    public static final String MyPREFERENCES = "MyPrefs" ;
-    SharedPreferences sharedpreferences;
+
+    DatabaseService databaseService;
+    AuthenticationService authenticationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
+        authenticationService = AuthenticationService.getInstance();
+        databaseService = DatabaseService.getInstance();
 
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         initviews();
-
-        // Write a message to the database
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("Users");
-
-        mAuth = FirebaseAuth.getInstance();
 
 
     }
@@ -81,82 +68,70 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
 
         //check if registration is valid
-        Boolean isValid = true;
+        boolean isValid = true;
         if (fName.length() < 2) {
 
             etFname.setError("שם פרטי קצר מדי");
             isValid = false;
         }
 
-            if (lName.length() < 2) {
+        if (lName.length() < 2) {
 
-                etLname.setError("שם משפחה קצר מדי");
-                isValid = false;
-            }
-            if (phone.length() < 9 || phone.length() > 10) {
-                etPhone.setError("מספר הטלפון לא תקין");
-                isValid = false;
-            }
+            etLname.setError("שם משפחה קצר מדי");
+            isValid = false;
+        }
+        if (phone.length() < 9 || phone.length() > 10) {
+            etPhone.setError("מספר הטלפון לא תקין");
+            isValid = false;
+        }
 
-            if (!email.contains("@")) {
-                etEmail.setError("כתובת האימייל לא תקינה");
-                isValid = false;
-            }
-            if (pass.length() < 6) {
+        if (!email.contains("@")) {
+            etEmail.setError("כתובת האימייל לא תקינה");
+            isValid = false;
+        }
+        if (pass.length() < 6) {
 
-                etPassword.setError("הסיסמה קצרה מדי");
-                isValid = false;
-            }
-            if (pass.length() > 20) {
+            etPassword.setError("הסיסמה קצרה מדי");
+            isValid = false;
+        }
+        if (pass.length() > 20) {
 
-                etPassword.setError("הסיסמה ארוכה מדי");
-                isValid = false;
-            }
+            etPassword.setError("הסיסמה ארוכה מדי");
+            isValid = false;
+        }
 
-
-            if (isValid == true) {
-
-                mAuth.createUserWithEmailAndPassword(email, pass)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d("TAG", "createUserWithEmail:success");
-                                    FirebaseUser fireuser = mAuth.getCurrentUser();
-                                    User newUser = new User(fireuser.getUid(), fName, lName, phone, email, pass);
-                                    myRef.child(fireuser.getUid()).setValue(newUser);
-                                    SharedPreferences.Editor editor = sharedpreferences.edit();
-
-                                    editor.putString("email", email);
-                                    editor.putString("password", pass);
-
-                                    editor.commit();
-                                    Intent goLog = new Intent(getApplicationContext(), MainActivity.class);
-                                    startActivity(goLog);
-
-
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(Register.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-
-                                }
-
-
-                            }
-                        });
-            }
-
-
-
-
+        if (!isValid) {
+            return;
         }
 
 
+        authenticationService.signUp(email, pass, new AuthenticationService.AuthCallback() {
+            @Override
+            public void onCompleted(String uid) {
+                User newUser = new User(uid, fName, lName, phone, email, pass);
+                databaseService.createNewUser(newUser, new DatabaseService.DatabaseCallback<Void>() {
+                    @Override
+                    public void onCompleted(Void object) {
+                        SharedPreferencesUtil.saveUser(getApplicationContext(), newUser);
+                        Intent goLog = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(goLog);
+                    }
+
+                    @Override
+                    public void onFailed(Exception e) {
+                        Log.w("TAG", "createUserWithEmail:failure", e);
+                        Toast.makeText(Register.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                Log.w("TAG", "createUserWithEmail:failure", e);
+                Toast.makeText(Register.this, "Authentication failed.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-
-
-
-
+}

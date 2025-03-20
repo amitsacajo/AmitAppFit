@@ -156,19 +156,19 @@ public class DatabaseService {
     }
 
     public void createNewUser(@NotNull final User user, @Nullable final DatabaseCallback<Void> callback) {
-        writeData("users/" + user.getId(), user, callback);
+        writeData("Users/" + user.getId(), user, callback);
     }
 
     public void getUser(@NotNull final String uid, @NotNull final DatabaseCallback<User> callback) {
-        getData("users/" + uid, User.class, callback);
+        getData("Users/" + uid, User.class, callback);
     }
 
     public void getUserList(@NotNull final DatabaseCallback<List<User>> callback) {
-        getDataList("users", User.class, new HashMap<>(), callback);
+        getDataList("Users", User.class, new HashMap<>(), callback);
     }
 
     public void deleteUser(@NotNull final String id, @Nullable final DatabaseCallback<Void> callback) {
-        deleteData("users/" + id, callback);
+        deleteData("Users/" + id, callback);
     }
 
 
