@@ -141,6 +141,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 if (isCurrentUser)
                     SharedPreferencesUtil.saveUser(getApplicationContext(), selectedUser);
                 Toast.makeText(UserProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                finish();
             }
 
             @Override

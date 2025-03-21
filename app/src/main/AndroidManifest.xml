@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <!-- Camera permission -->
+
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" /> <!-- Storage permission -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Internet permission -->
-    <uses-permission android:name="android.permission.INTERNET" />
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -21,60 +22,35 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AmitAppFit"
         tools:targetApi="31">
-        <activity
-            android:name=".screens.UserProfile"
-            android:exported="false" />
-        <activity
-            android:name=".screens.UserProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".screens.UsersList"
-            android:exported="false" />
-        <activity
-            android:name=".screens.EditUser"
-            android:exported="false" />
-        <activity
-            android:name=".screens.AdminMainPage"
-            android:exported="false" />
-        <activity
-            android:name=".screens.EditLook"
-            android:exported="false" />
-        <activity
-            android:name=".screens.edit_look"
-            android:exported="false" />
-        <activity
-            android:name=".screens.LogIn"
-            android:exported="true" />
-        <activity
-            android:name=".screens.Register"
-            android:exported="true" />
-        <activity
-            android:name=".screens.EditItemActivity"
-            android:exported="false" />
-        <activity
-            android:name=".screens.LookDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".screens.YourSavedLooks"
-            android:exported="false" />
-        <activity
-            android:name=".screens.CreateLook"
-            android:exported="true" />
-        <activity
-            android:name=".screens.MyClosetActivity"
-            android:exported="true" />
-        <activity
-            android:name=".screens.addItem"
-            android:exported="false" />
+
+        <!-- Main Activity -->
         <activity
             android:name=".screens.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Auth Activities -->
+        <activity android:name=".screens.LogIn" android:exported="true" />
+        <activity android:name=".screens.Register" android:exported="true" />
+
+        <!-- User and Admin Screens -->
+        <activity android:name=".screens.UserProfileActivity" android:exported="false" />
+        <activity android:name=".screens.UsersList" android:exported="false" />
+        <activity android:name=".screens.AdminMainPage" android:exported="false" />
+
+        <!-- Look and Closet Management -->
+        <activity android:name=".screens.EditLook" android:exported="false" />
+        <activity android:name=".screens.EditItemActivity" android:exported="false" />
+        <activity android:name=".screens.LookDetailsActivity" android:exported="false" />
+        <activity android:name=".screens.YourSavedLooks" android:exported="false" />
+        <activity android:name=".screens.CreateLook" android:exported="true" />
+        <activity android:name=".screens.MyClosetActivity" android:exported="true" />
+        <activity android:name=".screens.addItem" android:exported="false" />
+
     </application>
 
 </manifest>

@@ -108,7 +108,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         authenticationService.signUp(email, pass, new AuthenticationService.AuthCallback() {
             @Override
             public void onCompleted(String uid) {
-                User newUser = new User(uid, fName, lName, phone, email, pass);
+                User newUser = new User(uid, fName, lName, phone, email, pass, false);
                 databaseService.createNewUser(newUser, new DatabaseService.DatabaseCallback<Void>() {
                     @Override
                     public void onCompleted(Void object) {

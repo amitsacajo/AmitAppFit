@@ -9,9 +9,10 @@ public class User {
     String password;
     private boolean isAdmin;
 
+    public User() {
+    }
 
-
-    public User(String id, String fName, String lName, String phone, String email, String password) {
+    public User(String id, String fName, String lName, String phone, String email, String password, boolean isAdmin) {
         this.id = id;
         this.fName = fName;
         this.lName = lName;
@@ -19,24 +20,6 @@ public class User {
         this.email = email;
         this.password = password;
         this.isAdmin = isAdmin;
-
-    }
-
-    public User() {
-    }
-
-    public User(String id, String fName, String lName, String phone, String email) {
-        this.id = id;
-        this.fName = fName;
-        this.lName = lName;
-        this.phone = phone;
-        this.email = email;
-    }
-
-    public User(String id, String fName, String lName) {
-        this.id = id;
-        this.fName = fName;
-        this.lName = lName;
     }
 
     public String getId() {
