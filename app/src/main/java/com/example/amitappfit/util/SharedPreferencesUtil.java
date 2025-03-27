@@ -28,6 +28,8 @@ public class SharedPreferencesUtil {
         editor.apply();
     }
 
+
+
     /// Get a string from shared preferences
     /// @param context The context to use
     /// @param key The key to get the string with

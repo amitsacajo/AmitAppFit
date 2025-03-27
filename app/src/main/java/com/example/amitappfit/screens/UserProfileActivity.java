@@ -1,5 +1,6 @@
 package com.example.amitappfit.screens;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,12 +21,13 @@ import com.example.amitappfit.services.DatabaseService;
 import com.example.amitappfit.util.SharedPreferencesUtil;
 import com.example.amitappfit.util.Validator;
 
+
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "UserProfileActivity";
 
     private EditText etUserFirstName, etUserLastName, etUserEmail, etUserPhone, etUserPassword;
-    private Button btnUpdateProfile;
+    private Button btnUpdateProfile, btnOut;
     private DatabaseService databaseService;
     String selectedUid;
     User selectedUser;
@@ -67,8 +69,10 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         etUserPhone = findViewById(R.id.et_user_phone);
         etUserPassword = findViewById(R.id.et_user_password);
         btnUpdateProfile = findViewById(R.id.btn_edit_profile);
+        btnOut = findViewById(R.id.btnOut);
 
         btnUpdateProfile.setOnClickListener(this);
+        btnOut.setOnClickListener(this);
 
         showUserProfile();
     }
@@ -77,9 +81,20 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         if(v.getId() == R.id.btn_edit_profile) {
             updateUserProfile();
-            return;
+        } else if (v.getId() == R.id.btnOut) {
+            logoutUser();
         }
     }
+
+    private void logoutUser() {
+        AuthenticationService.getInstance().signOut();
+        SharedPreferencesUtil.signOutUser(this); // השתמש ב-this כ-Context
+        Intent intent = new Intent(this, MainActivity.class); // Redirect to login screen
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear previous screens
+        startActivity(intent);
+        finish();
+    }
+
 
     private void showUserProfile() {
         // Get the user data from shared preferences
@@ -93,12 +108,12 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 etUserEmail.setText(user.getEmail());
                 etUserPhone.setText(user.getPhone());
                 etUserPassword.setText(user.getPassword());
-
             }
 
             @Override
             public void onFailed(Exception e) {
                 Log.e(TAG, "Error getting user profile", e);
+                Toast.makeText(UserProfileActivity.this, "Failed to load profile", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -130,16 +145,16 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
         // Update the user data in the authentication
         Log.d(TAG, "Updating user profile");
+
         // Update the user data in the database
-        Log.d(TAG, "User profile updated in authentication");
-        Log.d(TAG, "Updating user profile in database");
         databaseService.createNewUser(selectedUser, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public void onCompleted(Void object) {
                 Log.d(TAG, "Profile updated successfully");
                 // Save the updated user data to shared preferences
-                if (isCurrentUser)
+                if (isCurrentUser) {
                     SharedPreferencesUtil.saveUser(getApplicationContext(), selectedUser);
+                }
                 Toast.makeText(UserProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -150,8 +165,6 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 Toast.makeText(UserProfileActivity.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     private boolean isValid(String firstName, String lastName, String phone, String email, String password) {
