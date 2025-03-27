@@ -46,6 +46,11 @@ public class DatabaseService {
         });
     }
 
+    public void updateUser(@NotNull final User user, @Nullable final DatabaseCallback<Void> callback) {
+        writeData("Users/" + user.getId(), user, callback);  // עדכון בנתיב של המשתמש
+    }
+
+
     private void deleteData(@NotNull final String path, @Nullable final DatabaseCallback<Void> callback) {
         databaseReference.child(path).removeValue().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

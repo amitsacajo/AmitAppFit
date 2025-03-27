@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -22,35 +21,70 @@
         android:theme="@style/Theme.AmitAppFit"
         tools:targetApi="31">
 
+        <!-- Admin Edit User -->
+        <activity
+            android:name=".screens.AdminEditUser"
+            android:exported="false" />
+
         <!-- Main Activity (remove MAIN action) -->
         <activity
             android:name=".screens.MainActivity"
             android:exported="true">
         </activity>
 
-        <!-- Auth Activities -->
-        <activity android:name=".screens.LogIn" android:exported="true">
+        <!-- LogIn Activity (remove MAIN action, not the launcher) -->
+        <activity
+            android:name=".screens.LogIn"
+            android:exported="true">
+            <!-- Remove the MAIN action -->
+            <!-- <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter> -->
+        </activity>
+
+        <activity
+            android:name=".screens.Register"
+            android:exported="true" />
+
+        <!-- User and Admin Screens -->
+        <activity
+            android:name=".screens.UserProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.UsersList"
+            android:exported="false" />
+
+        <!-- Admin Main Page (Set as launcher) -->
+        <activity
+            android:name=".screens.AdminMainPage"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".screens.Register" android:exported="true" />
 
-        <!-- User and Admin Screens -->
-        <activity android:name=".screens.UserProfileActivity" android:exported="false" />
-        <activity android:name=".screens.UsersList" android:exported="false" />
-        <activity android:name=".screens.AdminMainPage" android:exported="false" />
-
-        <!-- Look and Closet Management -->
-        <activity android:name=".screens.EditLook" android:exported="false" />
-        <activity android:name=".screens.EditItemActivity" android:exported="false" />
-        <activity android:name=".screens.LookDetailsActivity" android:exported="false" />
-        <activity android:name=".screens.YourSavedLooks" android:exported="false" />
-        <activity android:name=".screens.CreateLook" android:exported="true" />
-        <activity android:name=".screens.MyClosetActivity" android:exported="true" />
-        <activity android:name=".screens.addItem" android:exported="false" />
-
+        <activity
+            android:name=".screens.EditLook"
+            android:exported="false" />
+        <activity
+            android:name=".screens.EditItemActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.LookDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.YourSavedLooks"
+            android:exported="false" />
+        <activity
+            android:name=".screens.CreateLook"
+            android:exported="true" />
+        <activity
+            android:name=".screens.MyClosetActivity"
+            android:exported="true" />
+        <activity
+            android:name=".screens.addItem"
+            android:exported="false" />
     </application>
-
 </manifest>

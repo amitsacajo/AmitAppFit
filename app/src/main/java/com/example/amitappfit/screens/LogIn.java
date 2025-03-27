@@ -67,8 +67,17 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                         @Override
                         public void onCompleted(User user) {
                             SharedPreferencesUtil.saveUser(getApplicationContext(), user);
-                            Intent go = new Intent(getApplicationContext(), MyClosetActivity.class);
-                            startActivity(go);
+
+                            // בדוק אם המשתמש הוא מנהל
+                            if (user.isAdmin()) {
+                                // אם כן, עבור לעמוד המנהל
+                                Intent go = new Intent(getApplicationContext(), AdminMainPage.class);
+                                startActivity(go);
+                            } else {
+                                // אם לא, עבור לעמוד הרגיל
+                                Intent go = new Intent(getApplicationContext(), MyClosetActivity.class);
+                                startActivity(go);
+                            }
                             finish();
                         }
 
@@ -88,6 +97,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                             Toast.LENGTH_SHORT).show();
                 }
             });
+
 
 
         } else if (v.getId() == R.id.btnSignUp) {

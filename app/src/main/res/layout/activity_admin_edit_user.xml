@@ -1,0 +1,182 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4D1D1"
+    tools:context=".screens.AdminEditUser">
+
+    <!-- כותרת -->
+    <TextView
+        android:id="@+id/tv_user_profile_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Management"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <!-- שם פרטי -->
+    <TextView
+        android:id="@+id/tv_user_first_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="First Name:"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_profile_title"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="60dp" />
+
+    <EditText
+        android:id="@+id/et_user_first_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter first name"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_first_name_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <!-- שם משפחה -->
+    <TextView
+        android:id="@+id/tv_user_last_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last Name:"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/et_user_first_name"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/et_user_last_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter last name"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_last_name_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <!-- אימייל -->
+    <TextView
+        android:id="@+id/tv_user_email_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email:"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/et_user_last_name"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/et_user_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter email"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_email_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <!-- טלפון -->
+    <TextView
+        android:id="@+id/tv_user_phone_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone:"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/et_user_email"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/et_user_phone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter phone"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_phone_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <!-- סיסמה -->
+    <TextView
+        android:id="@+id/tv_user_password_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password:"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/et_user_phone"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/et_user_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter password"
+        android:inputType="textPassword"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_password_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <!-- כפתורים -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/et_user_password"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp">
+
+        <Button
+            android:id="@+id/btn_edit_user_profile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#FFB6C1"
+            android:text="Edit User Profile" />
+
+        <Button
+            android:id="@+id/btn_view_user_outfits"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="#ADD8E6"
+            android:text="View User Outfits" />
+    </LinearLayout>
+
+    <!-- כפתור מחיקת משתמש בתחתית -->
+    <Button
+        android:id="@+id/btn_delete_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FF6347"
+        android:text="Delete User"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

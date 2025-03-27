@@ -46,7 +46,7 @@ public class UsersList extends AppCompatActivity {
         UserAdapter.OnUserClickListener onUserClickListener = user -> {
             // Handle user click
             Log.d(TAG, "User clicked: " + user);
-            Intent intent = new Intent(this, UserProfileActivity.class);
+            Intent intent = new Intent(this, AdminEditUser.class);
             intent.putExtra("USER_UID", user.getId());
             startActivity(intent);
 
