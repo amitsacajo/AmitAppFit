@@ -23,6 +23,8 @@ public class LookDetailsActivity extends AppCompatActivity {
     private Button btnDeleteLook, btnChangeLook;
     DatabaseService databaseService;
     String lookId;
+    String userId;
+    Look currentLook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +48,26 @@ public class LookDetailsActivity extends AppCompatActivity {
         // קבלת הנתונים מה-Intent
         Intent intent = getIntent();
         lookId = intent.getStringExtra("look_id");
+        userId = intent.getStringExtra("look_user_id");
+
+        if (lookId == null || userId == null){
+            finish();
+            return;
+        }
+
+        // הגדרת לחיצה על כפתור מחיקה
+        btnDeleteLook.setOnClickListener(v -> deleteLook()); // מחיקת הלוק
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         // קריאה למסד הנתונים לקבלת פרטי הלוק
-        databaseService.getLook(lookId, new DatabaseService.DatabaseCallback<Look>() {
+        databaseService.getLook(userId, lookId, new DatabaseService.DatabaseCallback<Look>() {
             @Override
             public void onCompleted(Look look) {
+                currentLook = look;
                 // הצגת הנתונים ב-TextViews
                 tvLookName.setText(look.getName());
                 tvTop.setText("Top: " + look.getTop().getTitle());
@@ -70,17 +87,11 @@ public class LookDetailsActivity extends AppCompatActivity {
             }
         });
 
-        // הגדרת לחיצה על כפתור מחיקה
-        btnDeleteLook.setOnClickListener(v -> deleteLook(lookId)); // מחיקת הלוק
-
-
-
-
     }
 
     // פונקציה למחיקת הלוק
-    private void deleteLook(String lookId) {
-        databaseService.deleteLook(lookId, new DatabaseService.DatabaseCallback<Void>() {
+    private void deleteLook() {
+        databaseService.deleteLook(userId, lookId, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public void onCompleted(Void object) {
                 // הצגת הודעה למשתמש
@@ -102,6 +113,7 @@ public class LookDetailsActivity extends AppCompatActivity {
     public void onClick(View view) {
         Intent intent = new Intent(LookDetailsActivity.this, EditLook.class);
         intent.putExtra("LOOK_ID", lookId);
+        intent.putExtra("LOOK_USER_ID", userId);
         startActivity(intent);
 
 

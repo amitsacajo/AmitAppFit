@@ -19,12 +19,34 @@ import java.util.List;
 public class SpinnerItemAdapter extends ArrayAdapter<Item> {
 
     private final LayoutInflater inflater;
-    private final int resource;
+    private static final int resource = R.layout.spinner_item;
 
-    public SpinnerItemAdapter(@NonNull Context context, int resource, List<Item> objects) {
+    public SpinnerItemAdapter(@NonNull Context context, List<Item> objects) {
         super(context, resource, objects);
         this.inflater = LayoutInflater.from(context);
-        this.resource = resource;
+    }
+
+
+    @NonNull
+    @Override
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        if (convertView == null) {
+            convertView = inflater.inflate(resource, parent, false);
+        }
+
+        Item item = getItem(position);
+        if (item == null) return convertView;
+
+        // Set item title
+        TextView textView = convertView.findViewById(R.id.textView_item_spinner);
+        textView.setText(item.getTitle());
+
+        // Set item image
+        ImageView imageView = convertView.findViewById(R.id.imageView_item_spinner);
+        imageView.setImageBitmap(ImageUtil.convertFrom64base(item.getPicBase64()));
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(400,400));
+
+        return convertView;
     }
 
     @NonNull

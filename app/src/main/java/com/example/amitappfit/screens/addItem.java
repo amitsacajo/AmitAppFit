@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.amitappfit.R;
 import com.example.amitappfit.adapters.ImageSourceAdapter;
 import com.example.amitappfit.model.Item;
+import com.example.amitappfit.services.AuthenticationService;
 import com.example.amitappfit.services.DatabaseService;
 import com.example.amitappfit.util.ImageUtil;
 
@@ -136,7 +137,7 @@ public class addItem extends AppCompatActivity implements View.OnClickListener {
         }
 
         String id = databaseService.generateNewItemId();
-        Item item = new Item(id, itemName, category, ImageUtil.convertTo64Base(ivPreview));
+        Item item = new Item(id, itemName, category, ImageUtil.convertTo64Base(ivPreview), AuthenticationService.getInstance().getCurrentUserId());
         databaseService.createNewItem(item, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public void onCompleted(Void object) {

@@ -18,7 +18,7 @@ public class AdminEditUser extends AppCompatActivity {
     private EditText etFirstName, etLastName, etEmail, etPhone, etPassword;
     private Button btnEditUserProfile, btnViewUserOutfits, btnDeleteUser;
     private DatabaseService databaseService;
-    private String userId;
+    private String userId, lookId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -6,17 +6,19 @@ public class Item {
     private String title;
     private String category;
     private String picBase64;
+    private String userId;
 
     public Item() {
     }
 
 
 
-    public Item(String id, String title, String category, String picBase64) {
+    public Item(String id, String title, String category, String picBase64, String userId) {
         this.id = id;
         this.title = title;
         this.category = category;
         this.picBase64 = picBase64;
+        this.userId = userId;
     }
 
     public String getId() {
@@ -51,13 +53,22 @@ public class Item {
         this.picBase64 = picBase64;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", category='" + category + '\'' +
-                ", picBase64='" + picBase64 + '\'' +
+//                ", picBase64='" + picBase64 + '\'' +
+                ", userId='" + userId + '\'' +
                 '}';
     }
 }

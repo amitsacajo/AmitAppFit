@@ -115,24 +115,24 @@ public class DatabaseService {
     }
 
     public void createNewItem(@NotNull final Item item, @Nullable final DatabaseCallback<Void> callback) {
-        writeData("Items/" + item.getId(), item, callback);
+        writeData("Items/" + item.getUserId() + "/" + item.getId(), item, callback);
     }
 
     public void updateLook(@NotNull final Look look, @Nullable final DatabaseCallback<Void> callback) {
-        writeData("looks/" + look.getId(), look, callback);
+        writeData("looks/" + look.getUserId() + "/" + look.getId(), look, callback);
     }
 
 
-    public void getItem(@NotNull final String itemId, @NotNull final DatabaseCallback<Item> callback) {
-        getData("Items/" + itemId, Item.class, callback);
+    public void getItem(@NotNull final String userId, @NotNull final String itemId, @NotNull final DatabaseCallback<Item> callback) {
+        getData("Items/" + userId + "/" + itemId, Item.class, callback);
     }
 
-    public void getItemList(@NotNull final DatabaseCallback<List<Item>> callback) {
-        getDataList("Items", Item.class, new HashMap<>(), callback);
+    public void getItemList(@NotNull final String userId, @NotNull final DatabaseCallback<List<Item>> callback) {
+        getDataList("Items/" + userId, Item.class, new HashMap<>(), callback);
     }
 
-    public void deleteItem(@NotNull final String itemId, @Nullable final DatabaseCallback<Void> callback) {
-        deleteData("Items/" + itemId, callback);
+    public void deleteItem(@NotNull final String userId, @NotNull final String itemId, @Nullable final DatabaseCallback<Void> callback) {
+        deleteData("Items/" + userId + "/" + itemId, callback);
     }
 
     public String generateNewLookId() {
@@ -140,19 +140,19 @@ public class DatabaseService {
     }
 
     public void createNewLook(@NotNull final Look look, @Nullable final DatabaseCallback<Void> callback) {
-        writeData("looks/" + look.getId(), look, callback);
+        writeData("looks/" + look.getUserId() + "/" + look.getId(), look, callback);
     }
 
-    public void getLook(@NotNull final String id, @NotNull final DatabaseCallback<Look> callback) {
-        getData("looks/" + id, Look.class, callback);
+    public void getLook(@NotNull final String userId, @NotNull final String id, @NotNull final DatabaseCallback<Look> callback) {
+        getData("looks/" + userId + "/" + id, Look.class, callback);
     }
 
-    public void getLookList(@NotNull final DatabaseCallback<List<Look>> callback) {
-        getDataList("looks", Look.class, new HashMap<>(), callback);
+    public void getLookList(@NotNull final String userId, @NotNull final DatabaseCallback<List<Look>> callback) {
+        getDataList("looks/" + userId, Look.class, new HashMap<String, String>(), callback);
     }
 
-    public void deleteLook(@NotNull final String id, @Nullable final DatabaseCallback<Void> callback) {
-        deleteData("looks/" + id, callback);
+    public void deleteLook(@NotNull final String userId, @NotNull final String id, @Nullable final DatabaseCallback<Void> callback) {
+        deleteData("looks/" + userId + "/" + id, callback);
     }
 
     public interface DatabaseCallback<T> {

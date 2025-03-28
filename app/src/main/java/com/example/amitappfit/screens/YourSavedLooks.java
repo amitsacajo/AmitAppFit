@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.amitappfit.R;
 import com.example.amitappfit.adapters.LookAdapter;
 import com.example.amitappfit.model.Look;
+import com.example.amitappfit.services.AuthenticationService;
 import com.example.amitappfit.services.DatabaseService;
 
 import java.util.ArrayList;
@@ -19,11 +20,15 @@ public class YourSavedLooks extends AppCompatActivity {
     private List<Look> savedLooks;
 
     DatabaseService databaseService;
+    String userId;
+    LookAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_your_saved_looks);
+
+        userId = getIntent().getStringExtra("USER_UID");
 
         // אתחול רכיבי RecyclerView
         rvSavedLooks = findViewById(R.id.rvSavedLooks);
@@ -34,11 +39,16 @@ public class YourSavedLooks extends AppCompatActivity {
 
         // הגדרת RecyclerView עם כפתור ללחיצה על פריט
         rvSavedLooks.setLayoutManager(new LinearLayoutManager(this));
-        LookAdapter adapter = new LookAdapter(savedLooks, this::openLookDetails);
+        adapter = new LookAdapter(savedLooks, this::openLookDetails);
         rvSavedLooks.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         // קריאה למסד הנתונים לקבלת רשימת הלוקים
-        databaseService.getLookList(new DatabaseService.DatabaseCallback<List<Look>>() {
+        databaseService.getLookList(userId, new DatabaseService.DatabaseCallback<List<Look>>() {
             @Override
             public void onCompleted(List<Look> looks) {
                 savedLooks.clear();
@@ -57,6 +67,7 @@ public class YourSavedLooks extends AppCompatActivity {
         // פתיחת פרטי הלוק
         Intent intent = new Intent(this, LookDetailsActivity.class);
         intent.putExtra("look_id", look.getId());
+        intent.putExtra("look_user_id", look.getUserId());
         startActivity(intent);
     }
 }

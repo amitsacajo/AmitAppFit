@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -26,23 +27,22 @@
             android:name=".screens.AdminEditUser"
             android:exported="false" />
 
-        <!-- Main Activity (remove MAIN action) -->
+        <!-- Main Activity -->
         <activity
             android:name=".screens.MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
 
-        <!-- LogIn Activity (remove MAIN action, not the launcher) -->
+        <!-- LogIn Activity (Set as launcher) -->
         <activity
-            android:name=".screens.LogIn"
+            android:name=".screens.AdminMainPage"
             android:exported="true">
-            <!-- Remove the MAIN action -->
-            <!-- <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
+            </intent-filter>
         </activity>
 
+        <!-- Register Activity -->
         <activity
             android:name=".screens.Register"
             android:exported="true" />
@@ -55,16 +55,12 @@
             android:name=".screens.UsersList"
             android:exported="false" />
 
-        <!-- Admin Main Page (Set as launcher) -->
+        <!-- Admin Main Page (Launcher intent removed) -->
         <activity
-            android:name=".screens.AdminMainPage"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name=".screens.LogIn"
+            android:exported="true" />
 
+        <!-- Look Management -->
         <activity
             android:name=".screens.EditLook"
             android:exported="false" />

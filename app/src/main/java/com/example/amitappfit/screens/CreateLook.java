@@ -16,6 +16,7 @@ import com.example.amitappfit.R;
 import com.example.amitappfit.adapters.SpinnerItemAdapter;
 import com.example.amitappfit.model.Item;
 import com.example.amitappfit.model.Look;
+import com.example.amitappfit.services.AuthenticationService;
 import com.example.amitappfit.services.DatabaseService;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class CreateLook extends AppCompatActivity {
 
         // הגדרת ה-Spinners עם הפריטים
 
-        databaseService.getItemList(new DatabaseService.DatabaseCallback<List<Item>>() {
+        databaseService.getItemList(AuthenticationService.getInstance().getCurrentUserId(), new DatabaseService.DatabaseCallback<List<Item>>() {
             @Override
             public void onCompleted(List<Item> items) {
                 allItems = items;
@@ -77,9 +78,9 @@ public class CreateLook extends AppCompatActivity {
         List<Item> bottoms = filterItemsByCategory("Bottoms");
         List<Item> shoes = filterItemsByCategory("Shoes");
 
-        SpinnerItemAdapter topsAdapter = new SpinnerItemAdapter(this, android.R.layout.simple_spinner_item, tops);
-        SpinnerItemAdapter bottomsAdapter = new SpinnerItemAdapter(this, android.R.layout.simple_spinner_item, bottoms);
-        SpinnerItemAdapter shoesAdapter = new SpinnerItemAdapter(this, android.R.layout.simple_spinner_item, shoes);
+        SpinnerItemAdapter topsAdapter = new SpinnerItemAdapter(this, tops);
+        SpinnerItemAdapter bottomsAdapter = new SpinnerItemAdapter(this, bottoms);
+        SpinnerItemAdapter shoesAdapter = new SpinnerItemAdapter(this, shoes);
 
         spinnerTops.setAdapter(topsAdapter);
         spinnerBottoms.setAdapter(bottomsAdapter);
@@ -114,7 +115,7 @@ public class CreateLook extends AppCompatActivity {
 
         String id = databaseService.generateNewLookId();
 
-        Look newLook = new Look(id, lookName, top, bottom, shoes);
+        Look newLook = new Look(id, lookName, top, bottom, shoes, AuthenticationService.getInstance().getCurrentUserId());
 
         databaseService.createNewLook(newLook, new DatabaseService.DatabaseCallback<Void>() {
             @Override

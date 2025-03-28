@@ -8,17 +8,20 @@ public class Look {
     private Item top;
     private Item bottom;
     private Item shoes;
+    private String userId;
+
 
 
     public Look() {
     }
 
-    public Look(String id, String name, Item top, Item bottom, Item shoes) {
+    public Look(String id, String name, Item top, Item bottom, Item shoes, String userId) {
         this.id = id;
         this.name = name;
         this.top = top;
         this.bottom = bottom;
         this.shoes = shoes;
+        this.userId = userId;
     }
 
     public String getId() {
@@ -61,7 +64,15 @@ public class Look {
         this.shoes = shoes;
     }
 
-    @NonNull
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+
     @Override
     public String toString() {
         return "Look{" +
@@ -70,6 +81,7 @@ public class Look {
                 ", top=" + top +
                 ", bottom=" + bottom +
                 ", shoes=" + shoes +
+                ", userId='" + userId + '\'' +
                 '}';
     }
 }

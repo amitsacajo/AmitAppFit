@@ -14,18 +14,21 @@ import com.example.amitappfit.R;
 import com.example.amitappfit.adapters.SpinnerItemAdapter;
 import com.example.amitappfit.model.Item;
 import com.example.amitappfit.model.Look;
+import com.example.amitappfit.services.AuthenticationService;
 import com.example.amitappfit.services.DatabaseService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class EditLook extends AppCompatActivity {
     private EditText etLookName;
     private Spinner spinnerTops, spinnerBottoms, spinnerShoes;
-    private Button btnSaveLook, btnDeleteLook;
+    private Button btnSaveLook;
     private DatabaseService databaseService;
     private List<Item> allItems = new ArrayList<>();
     private Look currentLook;
+    String lookId, userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,28 +42,31 @@ public class EditLook extends AppCompatActivity {
         spinnerBottoms = findViewById(R.id.spinnerBottoms);
         spinnerShoes = findViewById(R.id.spinnerShoes);
         btnSaveLook = findViewById(R.id.btnSaveLook);
-        btnDeleteLook = findViewById(R.id.btnDeleteLook);
 
         // קבלת ה-ID של הלוק מתוך Intent
         Intent intent = getIntent();
-        String lookId = intent.getStringExtra("LOOK_ID");
+        lookId = intent.getStringExtra("LOOK_ID");
+        userId = intent.getStringExtra("LOOK_USER_ID");
 
-        if (lookId != null) {
-            loadLookData(lookId);
+        if (lookId == null || userId == null) {
+            finish();
+            return;
         }
 
+        loadLookData();
+
         btnSaveLook.setOnClickListener(v -> saveLookChanges());
-        btnDeleteLook.setOnClickListener(v -> deleteLook());
+
     }
 
-    private void loadLookData(String lookId) {
-        databaseService.getLook(lookId, new DatabaseService.DatabaseCallback<Look>() {
+    private void loadLookData() {
+        databaseService.getLook(userId, lookId, new DatabaseService.DatabaseCallback<Look>() {
             @Override
             public void onCompleted(Look look) {
                 currentLook = look;
                 etLookName.setText(look.getName());
 
-                databaseService.getItemList(new DatabaseService.DatabaseCallback<List<Item>>() {
+                databaseService.getItemList(look.getUserId(), new DatabaseService.DatabaseCallback<List<Item>>() {
                     @Override
                     public void onCompleted(List<Item> items) {
                         allItems = items;
@@ -86,9 +92,9 @@ public class EditLook extends AppCompatActivity {
         List<Item> bottoms = filterItemsByCategory("Bottoms");
         List<Item> shoes = filterItemsByCategory("Shoes");
 
-        SpinnerItemAdapter topsAdapter = new SpinnerItemAdapter(this, android.R.layout.simple_spinner_item, tops);
-        SpinnerItemAdapter bottomsAdapter = new SpinnerItemAdapter(this, android.R.layout.simple_spinner_item, bottoms);
-        SpinnerItemAdapter shoesAdapter = new SpinnerItemAdapter(this, android.R.layout.simple_spinner_item, shoes);
+        SpinnerItemAdapter topsAdapter = new SpinnerItemAdapter(this, tops);
+        SpinnerItemAdapter bottomsAdapter = new SpinnerItemAdapter(this, bottoms);
+        SpinnerItemAdapter shoesAdapter = new SpinnerItemAdapter(this,  shoes);
 
         spinnerTops.setAdapter(topsAdapter);
         spinnerBottoms.setAdapter(bottomsAdapter);
@@ -119,6 +125,8 @@ public class EditLook extends AppCompatActivity {
     }
 
     private void saveLookChanges() {
+        if (currentLook == null) return;
+
         String lookName = etLookName.getText().toString();
         if (lookName.isEmpty()) {
             Toast.makeText(this, "Please enter a name for your look", Toast.LENGTH_SHORT).show();
@@ -140,9 +148,9 @@ public class EditLook extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Look updated successfully!", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(EditLook.this, YourSavedLooks.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("USER_UID", userId);
                 startActivity(intent);
-
-
                 finish();
             }
 
@@ -153,25 +161,13 @@ public class EditLook extends AppCompatActivity {
         });
     }
 
-    private void deleteLook() {
-        databaseService.deleteLook(currentLook.getId(), new DatabaseService.DatabaseCallback<Void>() {
-            @Override
-            public void onCompleted(Void object) {
-                Toast.makeText(getApplicationContext(), "Look deleted successfully!", Toast.LENGTH_SHORT).show();
 
-                // מעבר לעמוד YourSavedLooks
-                Intent intent = new Intent(EditLook.this, YourSavedLooks.class);
-                startActivity(intent);
 
-                // סיום המסך הנוכחי כדי שלא יישאר בערימה
-                finish();
-            }
 
-            @Override
-            public void onFailed(Exception e) {
-                Toast.makeText(EditLook.this, "Failed to delete look", Toast.LENGTH_SHORT).show();
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
     }
-
 }

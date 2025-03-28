@@ -66,15 +66,18 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                     databaseService.getUser(uid, new DatabaseService.DatabaseCallback<User>() {
                         @Override
                         public void onCompleted(User user) {
+                            if (user == null) {
+                                Log.e("Login", "User is null after fetching from database.");
+                                Toast.makeText(getApplicationContext(), "User not found.", Toast.LENGTH_SHORT).show();
+                                return; // יציאה מהפונקציה כדי למנוע קריסה
+                            }
+
                             SharedPreferencesUtil.saveUser(getApplicationContext(), user);
 
-                            // בדוק אם המשתמש הוא מנהל
                             if (user.isAdmin()) {
-                                // אם כן, עבור לעמוד המנהל
                                 Intent go = new Intent(getApplicationContext(), AdminMainPage.class);
                                 startActivity(go);
                             } else {
-                                // אם לא, עבור לעמוד הרגיל
                                 Intent go = new Intent(getApplicationContext(), MyClosetActivity.class);
                                 startActivity(go);
                             }
@@ -84,10 +87,10 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                         @Override
                         public void onFailed(Exception e) {
                             Log.w("TAG", "getUser:failure", e);
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                     });
+
                 }
 
                 @Override

@@ -35,7 +35,8 @@ public class EditItemActivity extends AppCompatActivity implements View.OnClickL
     private ImageView ivPreview;
     DatabaseService databaseService;
 
-    private String itemId;
+    private String userId, itemId;
+    private Item currentItem;
 
     /// Activity result launcher for selecting image from gallery
     private ActivityResultLauncher<Intent> selectImageLauncher;
@@ -60,16 +61,18 @@ public class EditItemActivity extends AppCompatActivity implements View.OnClickL
 
         // קבלת נתוני הפריט שנבחר
         Intent intent = getIntent();
+        userId = intent.getStringExtra("item_user_id");
         itemId = intent.getStringExtra("item_id");
 
-        if (itemId == null) {
+        if (itemId == null || userId == null) {
             finish();
             return;
         }
 
-        databaseService.getItem(itemId, new DatabaseService.DatabaseCallback<Item>() {
+        databaseService.getItem(userId, itemId, new DatabaseService.DatabaseCallback<Item>() {
             @Override
             public void onCompleted(Item item) {
+                currentItem = item;
                 etItemName.setText(item.getTitle());
                 setupCategorySpinner(item.getCategory());
                 ivPreview.setImageBitmap(ImageUtil.convertFrom64base(item.getPicBase64()));
@@ -131,6 +134,8 @@ public class EditItemActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void saveChanges() {
+        if (currentItem == null) return;
+
         String updatedItemName = etItemName.getText().toString().trim();
         String updatedCategory = spinnerCategory.getSelectedItem().toString();
 
@@ -139,10 +144,11 @@ public class EditItemActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
-        // use database service
-        Item item = new Item(itemId, updatedItemName, updatedCategory, ImageUtil.convertTo64Base(ivPreview));
+        currentItem.setTitle(updatedItemName);
+        currentItem.setCategory(updatedCategory);
+        currentItem.setPicBase64(ImageUtil.convertTo64Base(ivPreview));
 
-        databaseService.createNewItem(item, new DatabaseService.DatabaseCallback<Void>() {
+        databaseService.createNewItem(currentItem, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public void onCompleted(Void object) {
                 Toast.makeText(getApplicationContext(),
@@ -163,8 +169,9 @@ public class EditItemActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void deleteItem() {
+        if (currentItem == null) return;
 
-        databaseService.deleteItem(itemId, new DatabaseService.DatabaseCallback<Void>() {
+        databaseService.deleteItem(currentItem.getUserId(), currentItem.getId(), new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public void onCompleted(Void object) {
                 Toast.makeText(getApplicationContext(),

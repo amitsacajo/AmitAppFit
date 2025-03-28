@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.amitappfit.R;
 import com.example.amitappfit.adapters.ClosetAdapter;
 import com.example.amitappfit.model.Item;
+import com.example.amitappfit.services.AuthenticationService;
 import com.example.amitappfit.services.DatabaseService;
 
 import java.util.ArrayList;
@@ -56,9 +57,6 @@ public class MyClosetActivity extends AppCompatActivity {
 
         // הגדרת Spinner עם קטגוריות
         setupCategorySpinner();
-
-        // טעינת הפריטים מה-SharedPreferences
-        loadItems();
 
         // לחיצה על כפתור הוספת פריט
         btnAddItem.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +112,12 @@ public class MyClosetActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadItems();
+    }
+
     // אתחול Spinner עם קטגוריות
     private void setupCategorySpinner() {
         List<String> categories = new ArrayList<>();
@@ -129,7 +133,7 @@ public class MyClosetActivity extends AppCompatActivity {
 
     // טעינת הפריטים מתוך SharedPreferences
     private void loadItems() {
-        databaseService.getItemList(new DatabaseService.DatabaseCallback<List<Item>>() {
+        databaseService.getItemList(AuthenticationService.getInstance().getCurrentUserId(), new DatabaseService.DatabaseCallback<List<Item>>() {
             @Override
             public void onCompleted(List<Item> items) {
                 allItems.clear();
