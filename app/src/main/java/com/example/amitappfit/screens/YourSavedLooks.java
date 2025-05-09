@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.amitappfit.R;
 import com.example.amitappfit.adapters.LookAdapter;
 import com.example.amitappfit.model.Look;
@@ -28,16 +29,14 @@ public class YourSavedLooks extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_your_saved_looks);
 
-        userId = getIntent().getStringExtra("USER_UID");
+        // קבלת UID של המשתמש הנוכחי
+        userId = AuthenticationService.getInstance().getCurrentUserId();
 
-        // אתחול רכיבי RecyclerView
+        // אתחול RecyclerView
         rvSavedLooks = findViewById(R.id.rvSavedLooks);
         databaseService = DatabaseService.getInstance();
 
-        // טעינת הלוקים
         savedLooks = new ArrayList<>();
-
-        // הגדרת RecyclerView עם כפתור ללחיצה על פריט
         rvSavedLooks.setLayoutManager(new LinearLayoutManager(this));
         adapter = new LookAdapter(savedLooks, this::openLookDetails);
         rvSavedLooks.setAdapter(adapter);
@@ -47,7 +46,7 @@ public class YourSavedLooks extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // קריאה למסד הנתונים לקבלת רשימת הלוקים
+        // קריאה למסד הנתונים לקבלת רשימת הלוקים של המשתמש
         databaseService.getLookList(userId, new DatabaseService.DatabaseCallback<List<Look>>() {
             @Override
             public void onCompleted(List<Look> looks) {
@@ -64,7 +63,6 @@ public class YourSavedLooks extends AppCompatActivity {
     }
 
     private void openLookDetails(Look look) {
-        // פתיחת פרטי הלוק
         Intent intent = new Intent(this, LookDetailsActivity.class);
         intent.putExtra("look_id", look.getId());
         intent.putExtra("look_user_id", look.getUserId());

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.AdapterView;
 
@@ -22,13 +21,17 @@ import com.example.amitappfit.services.DatabaseService;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
+
 public class MyClosetActivity extends AppCompatActivity {
 
-    private Button btnAddItem, btnCreateLook, btnYourSavedLooks; //
-    private Spinner spinnerCategories; // Spinner לבחירת קטגוריה
-    private RecyclerView rvClosetItems; // RecyclerView להצגת הפריטים
-    private ClosetAdapter adapter; // מחלקת האדפטר
-    private ImageButton btnProfile ;
+    private Button btnAddItem, btnCreateLook, btnYourSavedLooks;
+    private Spinner spinnerCategories;
+    private RecyclerView rvClosetItems;
+    private ClosetAdapter adapter;
 
     List<Item> allItems = new ArrayList<>();
     DatabaseService databaseService;
@@ -36,7 +39,11 @@ public class MyClosetActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_closet); // מחבר את ה-XML למחלקה
+        setContentView(R.layout.activity_my_closet);
+
+        // אתחול ה-Toolbar
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);  // הוספתי את השורה הזאת
 
         databaseService = DatabaseService.getInstance();
 
@@ -45,10 +52,7 @@ public class MyClosetActivity extends AppCompatActivity {
         spinnerCategories = findViewById(R.id.spinnerCategories);
         rvClosetItems = findViewById(R.id.rvClosetItems);
         btnCreateLook = findViewById(R.id.btnCreateLook);
-        btnYourSavedLooks = findViewById(R.id.btnYourSavedLooks); // אתחול כפתור ה- "Your Saved Looks"
-        btnProfile = findViewById(R.id.btnProfile);
-
-
+        btnYourSavedLooks = findViewById(R.id.btnYourSavedLooks);
 
         // הגדרת RecyclerView
         rvClosetItems.setLayoutManager(new LinearLayoutManager(this));
@@ -62,7 +66,6 @@ public class MyClosetActivity extends AppCompatActivity {
         btnAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ניווט לעמוד הוספת פריט
                 Intent intent = new Intent(MyClosetActivity.this, addItem.class);
                 startActivity(intent);
             }
@@ -72,33 +75,21 @@ public class MyClosetActivity extends AppCompatActivity {
         btnCreateLook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ניווט לעמוד יצירת לוק
                 Intent intent = new Intent(MyClosetActivity.this, CreateLook.class);
                 startActivity(intent);
             }
         });
 
-        // לחיצה על כפתור "Your Saved Looks"
+        // לחיצה על כפתור הלוקים השמורים
         btnYourSavedLooks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ניווט לעמוד הלוקים השמורים
                 Intent intent = new Intent(MyClosetActivity.this, YourSavedLooks.class);
                 startActivity(intent);
             }
         });
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MyClosetActivity.this, UserProfileActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-
-        // פעולה בעת שינוי ב-Spinner של הקטגוריה
+        // סינון לפי קטגוריה
         spinnerCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -107,7 +98,7 @@ public class MyClosetActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // לא נדרש לבצע שום פעולה אם לא נבחרה שום קטגוריה
+                // כלום
             }
         });
     }
@@ -118,7 +109,6 @@ public class MyClosetActivity extends AppCompatActivity {
         loadItems();
     }
 
-    // אתחול Spinner עם קטגוריות
     private void setupCategorySpinner() {
         List<String> categories = new ArrayList<>();
         categories.add("All Items");
@@ -131,7 +121,6 @@ public class MyClosetActivity extends AppCompatActivity {
         spinnerCategories.setAdapter(adapter);
     }
 
-    // טעינת הפריטים מתוך SharedPreferences
     private void loadItems() {
         databaseService.getItemList(AuthenticationService.getInstance().getCurrentUserId(), new DatabaseService.DatabaseCallback<List<Item>>() {
             @Override
@@ -143,21 +132,19 @@ public class MyClosetActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                // טיפול בשגיאות במקרה של כשלון
+                // טיפול בשגיאות
+                Toast.makeText(MyClosetActivity.this, "Failed to load items: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    // סינון פריטים לפי קטגוריה
     private void filterItemsByCategory() {
         String selectedCategory = spinnerCategories.getSelectedItem().toString();
 
         List<Item> filteredItems = new ArrayList<>();
-        // אם נבחרה קטגוריית "All Items", הצג את כל הפריטים
         if (selectedCategory.equals("All Items")) {
             filteredItems.addAll(allItems);
         } else {
-            // סינון פריטים לפי קטגוריה
             for (Item item : allItems) {
                 if (item.getCategory().equals(selectedCategory)) {
                     filteredItems.add(item);
@@ -165,7 +152,28 @@ public class MyClosetActivity extends AppCompatActivity {
             }
         }
 
-        // עדכון RecyclerView עם הפריטים המסוננים
         adapter.updateItems(filteredItems);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_more) {
+            // פעולה עבור פריט "More"
+            Toast.makeText(this, "More options clicked", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (item.getItemId() == R.id.showP) {
+            // ניווט לעמוד פרופיל המשתמש
+            Intent intent1 = new Intent(this, UserProfileActivity.class);
+            startActivity(intent1);
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.my_closet_menu, menu);  // תוודא שהקובץ my_closet_menu.xml קיים
+        return true;
     }
 }

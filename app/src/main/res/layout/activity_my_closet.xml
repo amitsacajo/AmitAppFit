@@ -8,102 +8,98 @@
     android:background="#F4D1D1"
     tools:context=".screens.MyClosetActivity">
 
-    <!-- ScrollView שמאפשר גלילה -->
-    <android.widget.ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <!-- LinearLayout לארגון התוכן באופן אנכי -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
-
-            <!-- כותרת -->
-            <TextView
-                android:id="@+id/tvMyCloset"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Your Items!"
-                android:textSize="35sp"
-                android:textColor="#A758B8"
-                android:layout_gravity="center"
-                android:layout_marginBottom="32dp" />
-
-            <!-- כפתור הוספת פריט -->
-            <Button
-                android:id="@+id/btnAddItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Item"
-                android:onClick="onClick"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:backgroundTint="#A7C5BD"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp"
-                android:layout_gravity="center" />
-
-            <!-- כפתור יצירת לוק -->
-            <Button
-                android:id="@+id/btnCreateLook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Create Look"
-                android:onClick="onClick"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:backgroundTint="#F4C6D7"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp"
-                android:layout_gravity="center" />
-
-            <Button
-                android:id="@+id/btnYourSavedLooks"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Your Saved Looks"
-                android:onClick="onClickYourSavedLooks"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:backgroundTint="#FFB6C1"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp"
-                android:layout_gravity="center" />
-
-            <!-- Spinner לקטגוריות -->
-            <Spinner
-                android:id="@+id/spinnerCategories"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginBottom="16dp" />
-
-            <!-- RecyclerView לפריטים -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvClosetItems"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                tools:listitem="@layout/item_layout" />
-
-        </LinearLayout>
-    </android.widget.ScrollView>
-
-    <!-- כפתור פרופיל בצד ימין למעלה עם אייקון -->
-    <ImageButton
-        android:id="@+id/btnProfile"
-        android:layout_width="66dp"
-        android:layout_height="66dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/person"
-        android:contentDescription="Profile"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintEnd_toEndOf="parent"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="@android:color/white"
+        android:elevation="4dp"
+        app:title="My Closet"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Title Text -->
+    <TextView
+        android:id="@+id/tvMyCloset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Items!"
+        android:textSize="35sp"
+        android:textColor="#A758B8"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_gravity="center"/>
+
+    <!-- Add Item Button -->
+    <Button
+        android:id="@+id/btnAddItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Item"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:backgroundTint="#A7C5BD"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvMyCloset"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Create Look Button -->
+    <Button
+        android:id="@+id/btnCreateLook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Look"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:backgroundTint="#F4C6D7"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/btnAddItem"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Your Saved Looks Button -->
+    <Button
+        android:id="@+id/btnYourSavedLooks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Saved Looks"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:backgroundTint="#FFB6C1"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/btnCreateLook"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Category Spinner -->
+    <Spinner
+        android:id="@+id/spinnerCategories"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btnYourSavedLooks"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- RecyclerView for Items -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvClosetItems"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/spinnerCategories"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/item_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
