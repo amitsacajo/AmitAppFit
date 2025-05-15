@@ -2,12 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_more"
-        android:title="More"
-        android:icon="@drawable/ic_more_vert"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/showP"
         android:title="הצגת המשתמש" />
+
+
+
 </menu>

@@ -15,18 +15,15 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logonew"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AmitAppFit"
         tools:targetApi="31">
         <activity
-            android:name=".MenuMyCloset"
+            android:name=".screens.AdminMainPage"
             android:exported="false" />
-        <activity
-            android:name=".menu_my_closet"
-            android:exported="false" /> <!-- Admin Edit User -->
         <activity
             android:name=".screens.AdminEditUser"
             android:exported="false" /> <!-- Main Activity -->
@@ -34,7 +31,7 @@
             android:name=".screens.MainActivity"
             android:exported="true" /> <!-- LogIn Activity (Set as launcher) -->
         <activity
-            android:name=".screens.AdminMainPage"
+            android:name=".screens.splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
