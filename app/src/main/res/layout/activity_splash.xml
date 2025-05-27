@@ -12,7 +12,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ברוכים הבאים לאפליקצייה של עמית המקסימה"
+        android:text="Welcome to the application of the charming amit"
         android:textStyle="bold"
         android:textColor="#E656B6"
         android:textSize="25dp"

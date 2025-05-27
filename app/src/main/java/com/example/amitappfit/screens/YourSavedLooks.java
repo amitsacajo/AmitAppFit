@@ -30,7 +30,11 @@ public class YourSavedLooks extends AppCompatActivity {
         setContentView(R.layout.activity_your_saved_looks);
 
         // קבלת UID של המשתמש הנוכחי
-        userId = AuthenticationService.getInstance().getCurrentUserId();
+        userId = getIntent().getStringExtra("USER_UID");
+        if (userId == null || userId.isEmpty()) {
+            userId = AuthenticationService.getInstance().getCurrentUserId();
+        }
+
 
         // אתחול RecyclerView
         rvSavedLooks = findViewById(R.id.rvSavedLooks);

@@ -7,19 +7,19 @@ public class User {
     String phone;
     String email;
     String password;
-    private boolean isAdmin;
+    private boolean admin;
 
     public User() {
     }
 
-    public User(String id, String fName, String lName, String phone, String email, String password, boolean isAdmin) {
+    public User(String id, String fName, String lName, String phone, String email, String password, boolean admin) {
         this.id = id;
         this.fName = fName;
         this.lName = lName;
         this.phone = phone;
         this.email = email;
         this.password = password;
-        this.isAdmin = isAdmin;
+        this.admin = admin;
     }
 
     public String getId() {
@@ -70,15 +70,13 @@ public class User {
         this.password = password;
     }
 
-
     public boolean isAdmin() {
-        return isAdmin;
+        return admin;
     }
 
     public void setAdmin(boolean admin) {
-        isAdmin = admin;
+        this.admin = admin;
     }
-
 
     @Override
     public String toString() {
@@ -89,9 +87,7 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", isAdmin=" + isAdmin +
+                ", isAdmin=" + admin +
                 '}';
     }
-
-
 }
