@@ -31,6 +31,11 @@ public class CreateLook extends AppCompatActivity {
 
     List<Item> allItems = new ArrayList<>();
 
+    // רשימות פריטים מסוננות לפי קטגוריה
+    private List<Item> tops = new ArrayList<>();
+    private List<Item> bottoms = new ArrayList<>();
+    private List<Item> shoes = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +47,7 @@ public class CreateLook extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         databaseService = DatabaseService.getInstance();
 
         // אתחול רכיבים
@@ -51,8 +57,7 @@ public class CreateLook extends AppCompatActivity {
         spinnerShoes = findViewById(R.id.spinnerShoes);
         btnSaveLook = findViewById(R.id.btnSaveLook);
 
-        // הגדרת ה-Spinners עם הפריטים
-
+        // טעינת כל הפריטים מהמסד
         databaseService.getItemList(AuthenticationService.getInstance().getCurrentUserId(), new DatabaseService.DatabaseCallback<List<Item>>() {
             @Override
             public void onCompleted(List<Item> items) {
@@ -62,21 +67,18 @@ public class CreateLook extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-
+                Toast.makeText(CreateLook.this, "Failed to load items.", Toast.LENGTH_SHORT).show();
             }
         });
 
-
-
-        // שמירת הלוק
+        // לחיצה על שמירת הלוק
         btnSaveLook.setOnClickListener(v -> saveLook());
-
     }
 
     private void setupSpinners() {
-        List<Item> tops = filterItemsByCategory("Tops");
-        List<Item> bottoms = filterItemsByCategory("Bottoms");
-        List<Item> shoes = filterItemsByCategory("Shoes");
+        tops = filterItemsByCategory("Tops");
+        bottoms = filterItemsByCategory("Bottoms");
+        shoes = filterItemsByCategory("Shoes");
 
         SpinnerItemAdapter topsAdapter = new SpinnerItemAdapter(this, tops);
         SpinnerItemAdapter bottomsAdapter = new SpinnerItemAdapter(this, bottoms);
@@ -98,31 +100,37 @@ public class CreateLook extends AppCompatActivity {
     }
 
     private void saveLook() {
-        String lookName = etLookName.getText().toString();
+        String lookName = etLookName.getText().toString().trim();
+
         if (lookName.isEmpty()) {
             Toast.makeText(this, "Please enter a name for your look", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (spinnerTops.getAdapter() == null || spinnerTops.getAdapter().getCount() == 0) {
-            Toast.makeText(this, "Please add items to Tops category first", Toast.LENGTH_SHORT).show();
+        if (tops.isEmpty() || bottoms.isEmpty() || shoes.isEmpty()) {
+            Toast.makeText(this, "You must have at least one item in each category (Top, Bottom, Shoes) to create a look.", Toast.LENGTH_LONG).show();
             return;
         }
 
         Item top = (Item) spinnerTops.getSelectedItem();
         Item bottom = (Item) spinnerBottoms.getSelectedItem();
-        Item shoes = (Item) spinnerShoes.getSelectedItem();
+        Item shoesItem = (Item) spinnerShoes.getSelectedItem();
 
         String id = databaseService.generateNewLookId();
 
-        Look newLook = new Look(id, lookName, top, bottom, shoes, AuthenticationService.getInstance().getCurrentUserId());
+        Look newLook = new Look(
+                id,
+                lookName,
+                top,
+                bottom,
+                shoesItem,
+                AuthenticationService.getInstance().getCurrentUserId()
+        );
 
         databaseService.createNewLook(newLook, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public void onCompleted(Void object) {
                 Toast.makeText(getApplicationContext(), "Look \"" + lookName + "\" saved successfully!", Toast.LENGTH_SHORT).show();
-
-                // מעבר לעמוד הלוקים השמורים
                 Intent intent = new Intent(CreateLook.this, YourSavedLooks.class);
                 startActivity(intent);
                 finish();
@@ -134,5 +142,4 @@ public class CreateLook extends AppCompatActivity {
             }
         });
     }
-
 }

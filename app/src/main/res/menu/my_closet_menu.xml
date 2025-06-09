@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/showP"
-        android:title="הצגת המשתמש" />
+        android:title="show user" />
 
 
 

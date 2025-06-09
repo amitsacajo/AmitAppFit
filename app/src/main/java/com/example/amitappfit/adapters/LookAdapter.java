@@ -37,10 +37,24 @@ public class LookAdapter extends RecyclerView.Adapter<LookAdapter.LookViewHolder
         // חיבור נתוני הלוק לפריט בתצוגה
         Look look = lookList.get(position);
         holder.tvLookName.setText(look.getName());
-        holder.tvTop.setText("Top: " + look.getTop().getTitle());
-        holder.tvBottom.setText("Bottom: " + look.getBottom().getTitle());
-        holder.tvShoes.setText("Shoes: " + look.getShoes().getTitle());
-
+        if (look.getTop() != null) {
+            holder.tvTop.setVisibility(View.VISIBLE);
+            holder.tvTop.setText("Top: " + look.getTop().getTitle());
+        } else {
+            holder.tvTop.setVisibility(View.GONE);
+        }
+        if (look.getBottom() != null) {
+            holder.tvBottom.setVisibility(View.VISIBLE);
+            holder.tvBottom.setText("Bottom: " + look.getBottom().getTitle());
+        } else {
+            holder.tvBottom.setVisibility(View.GONE);
+        }
+        if (look.getShoes() != null) {
+            holder.tvShoes.setVisibility(View.VISIBLE);
+            holder.tvShoes.setText("Shoes: " + look.getShoes().getTitle());
+        } else {
+            holder.tvShoes.setVisibility(View.GONE);
+        }
         // הגדרת לחיצה על פריט
         holder.itemView.setOnClickListener(v -> listener.onItemClick(look));
     }

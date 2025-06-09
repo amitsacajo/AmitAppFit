@@ -70,14 +70,33 @@ public class LookDetailsActivity extends AppCompatActivity {
                 currentLook = look;
                 // הצגת הנתונים ב-TextViews
                 tvLookName.setText(look.getName());
-                tvTop.setText("Top: " + look.getTop().getTitle());
-                tvBottom.setText("Bottom: " + look.getBottom().getTitle());
-                tvShoes.setText("Shoes: " + look.getShoes().getTitle());
-
-                // הצגת התמונות ב-ImageViews
-                imgTop.setImageBitmap(ImageUtil.convertFrom64base(look.getTop().getPicBase64()));
-                imgBottom.setImageBitmap(ImageUtil.convertFrom64base(look.getBottom().getPicBase64()));
-                imgShoes.setImageBitmap(ImageUtil.convertFrom64base(look.getShoes().getPicBase64()));
+                if (look.getTop() == null) {
+                    tvTop.setVisibility(View.GONE);
+                    imgTop.setVisibility(View.GONE);
+                } else {
+                    tvTop.setText("Top: " + look.getTop().getTitle());
+                    imgTop.setImageBitmap(ImageUtil.convertFrom64base(look.getTop().getPicBase64()));
+                    tvTop.setVisibility(View.VISIBLE);
+                    imgTop.setVisibility(View.VISIBLE);
+                }
+                if (look.getBottom() == null) {
+                    tvBottom.setVisibility(View.GONE);
+                    imgBottom.setVisibility(View.GONE);
+                } else {
+                    tvBottom.setText("Bottom: " + look.getBottom().getTitle());
+                    imgBottom.setImageBitmap(ImageUtil.convertFrom64base(look.getBottom().getPicBase64()));
+                    tvBottom.setVisibility(View.VISIBLE);
+                    imgBottom.setVisibility(View.VISIBLE);
+                }
+                if (look.getShoes() == null) {
+                    tvShoes.setVisibility(View.GONE);
+                    imgShoes.setVisibility(View.GONE);
+                } else {
+                    tvShoes.setText("Shoes: " + look.getShoes().getTitle());
+                    imgShoes.setImageBitmap(ImageUtil.convertFrom64base(look.getShoes().getPicBase64()));
+                    tvShoes.setVisibility(View.VISIBLE);
+                    imgShoes.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

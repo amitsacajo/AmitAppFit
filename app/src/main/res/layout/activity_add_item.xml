@@ -54,14 +54,13 @@
                 android:layout_marginBottom="16dp" />
 
             <!-- כפתור להעלאת תמונה -->
-            <Button
-                android:id="@+id/btnUploadImage"
+            <TextView
+                android:id="@+id/tvloadImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Upload Image"
-                android:textColor="#FFFFFF"
+                android:text="Upload Image:"
                 android:textSize="18sp"
-                android:backgroundTint="#F4C6D7"
+                android:textColor="#A758B8"
                 android:padding="12dp"
                 android:layout_marginBottom="16dp"
                 android:layout_gravity="center" />
