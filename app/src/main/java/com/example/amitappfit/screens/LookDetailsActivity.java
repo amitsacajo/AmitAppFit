@@ -18,22 +18,25 @@ import com.example.amitappfit.util.ImageUtil;
 
 public class LookDetailsActivity extends AppCompatActivity {
 
+    // הגדרת רכיבי UI להצגת מידע על הלוק
     private TextView tvLookName, tvTop, tvBottom, tvShoes;
     private ImageView imgTop, imgBottom, imgShoes;
     private Button btnDeleteLook, btnChangeLook;
-    DatabaseService databaseService;
-    String lookId;
-    String userId;
-    Look currentLook;
+
+    DatabaseService databaseService; // שירות לגישה למסד נתונים
+    String lookId;                   // מזהה הלוק שמוצג
+    String userId;                   // מזהה המשתמש
+    Look currentLook;                // אובייקט הלוק הנוכחי
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_look_details);
 
+        // אתחול שירות מסד הנתונים
         databaseService = DatabaseService.getInstance();
 
-        // הגדרת TextViews ו-ImageViews
+        // קישור רכיבי הממשק לפי ה-IDs שלהם בקובץ ה-layout
         tvLookName = findViewById(R.id.tvLookName);
         tvTop = findViewById(R.id.tvTop);
         tvBottom = findViewById(R.id.tvBottom);
@@ -45,40 +48,46 @@ public class LookDetailsActivity extends AppCompatActivity {
         btnDeleteLook = findViewById(R.id.btnDeleteLook);
         btnChangeLook = findViewById(R.id.btnChangeLook);
 
-        // קבלת הנתונים מה-Intent
+        // קבלת הנתונים שנשלחו ל-Activity דרך ה-Intent
         Intent intent = getIntent();
-        lookId = intent.getStringExtra("look_id");
-        userId = intent.getStringExtra("look_user_id");
+        lookId = intent.getStringExtra("look_id");         // מזהה הלוק להצגה
+        userId = intent.getStringExtra("look_user_id");    // מזהה המשתמש
 
+        // אם חסר מידע קריטי, סוגרים את המסך
         if (lookId == null || userId == null){
             finish();
             return;
         }
 
-        // הגדרת לחיצה על כפתור מחיקה
-        btnDeleteLook.setOnClickListener(v -> deleteLook()); // מחיקת הלוק
+        // הגדרת פעולה לכפתור מחיקה - כאשר לוחצים, קוראים לפונקציה שמוחקת את הלוק
+        btnDeleteLook.setOnClickListener(v -> deleteLook());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        // קריאה למסד הנתונים לקבלת פרטי הלוק
+        // טוען את פרטי הלוק מהמסד ומציג אותם במסך
         databaseService.getLook(userId, lookId, new DatabaseService.DatabaseCallback<Look>() {
             @Override
             public void onCompleted(Look look) {
                 currentLook = look;
-                // הצגת הנתונים ב-TextViews
+
+                // מציג את שם הלוק
                 tvLookName.setText(look.getName());
+
+                // בדיקה האם פריט העליונה קיים
                 if (look.getTop() == null) {
-                    tvTop.setVisibility(View.GONE);
+                    tvTop.setVisibility(View.GONE);      // מסתיר טקסט ו-ImageView אם הפריט ריק
                     imgTop.setVisibility(View.GONE);
                 } else {
-                    tvTop.setText("Top: " + look.getTop().getTitle());
-                    imgTop.setImageBitmap(ImageUtil.convertFrom64base(look.getTop().getPicBase64()));
+                    tvTop.setText("Top: " + look.getTop().getTitle()); // מציג את שם הפריט
+                    imgTop.setImageBitmap(ImageUtil.convertFrom64base(look.getTop().getPicBase64())); // ממיר מ-Base64 לתמונה ומציג
                     tvTop.setVisibility(View.VISIBLE);
                     imgTop.setVisibility(View.VISIBLE);
                 }
+
+                // בדיקה האם פריט התחתונה קיים
                 if (look.getBottom() == null) {
                     tvBottom.setVisibility(View.GONE);
                     imgBottom.setVisibility(View.GONE);
@@ -88,6 +97,8 @@ public class LookDetailsActivity extends AppCompatActivity {
                     tvBottom.setVisibility(View.VISIBLE);
                     imgBottom.setVisibility(View.VISIBLE);
                 }
+
+                // בדיקה האם פריט הנעליים קיים
                 if (look.getShoes() == null) {
                     tvShoes.setVisibility(View.GONE);
                     imgShoes.setVisibility(View.GONE);
@@ -101,40 +112,39 @@ public class LookDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                // טיפול בשגיאות
+                // במידה ויש שגיאה בטעינת הפרטים - מציג הודעת Toast למשתמש
                 Toast.makeText(LookDetailsActivity.this, "Failed to load look details.", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    // פונקציה למחיקת הלוק
+    // פונקציה שמוחקת את הלוק ממסד הנתונים
     private void deleteLook() {
         databaseService.deleteLook(userId, lookId, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public void onCompleted(Void object) {
-                // הצגת הודעה למשתמש
+                // מציג הודעה שהלוק נמחק בהצלחה
                 Toast.makeText(LookDetailsActivity.this, "Look deleted successfully", Toast.LENGTH_SHORT).show();
 
-                // חזרה למסך הראשי או כל מסך אחר
+                // מפנה את המשתמש חזרה למסך שמציג את כל הלוקים השמורים
                 Intent intent = new Intent(LookDetailsActivity.this, YourSavedLooks.class);
                 startActivity(intent);
-                finish();
+                finish(); // סוגר את המסך הנוכחי
             }
 
             @Override
             public void onFailed(Exception e) {
-                // טיפול בשגיאות
+                // טיפול בשגיאות (אפשר להוסיף כאן הודעות שגיאה)
             }
         });
     }
 
+    // פונקציה שמטפלת בלחיצה על כפתור "שנה לוק"
     public void onClick(View view) {
         Intent intent = new Intent(LookDetailsActivity.this, EditLook.class);
-        intent.putExtra("LOOK_ID", lookId);
-        intent.putExtra("LOOK_USER_ID", userId);
-        startActivity(intent);
-
-
+        intent.putExtra("LOOK_ID", lookId);           // מעבירה את מזהה הלוק לעריכה
+        intent.putExtra("LOOK_USER_ID", userId);      // ומזהה המשתמש
+        startActivity(intent);                         // פותחת את מסך עריכת הלוק
     }
 }

@@ -33,36 +33,36 @@ import java.util.Map;
 
 public class addItem extends AppCompatActivity implements View.OnClickListener {
 
+    // שדות למרכיבי הממשק
     private EditText etItemName; // שדה להזנת שם הפריט
-    private Spinner spinnerCategory; // Spinner לקטגוריות
-    private ImageView ivPreview; // תצוגת מקדימה של התמונה
+    private Spinner spinnerCategory; // תפריט נפתח לבחירת קטגוריה
+    private ImageView ivPreview; // תצוגה מקדימה של התמונה שהמשתמש בחר
 
-    /// Activity result launcher for selecting image from gallery
+    // משגרי תוצאות לפעולות של בחירת תמונה מהגלריה או צילום תמונה
     private ActivityResultLauncher<Intent> selectImageLauncher;
-    /// Activity result launcher for capturing image from camera
     private ActivityResultLauncher<Intent> captureImageLauncher;
 
+    // שירות לגישה למסד הנתונים
     DatabaseService databaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_item); // מחבר את ה-XML למחלקה
+        setContentView(R.layout.activity_add_item); // מחבר את ה-XML למסך הנוכחי
 
-        ImageUtil.requestPermission(this);
-        databaseService = DatabaseService.getInstance();
+        ImageUtil.requestPermission(this); // בקשת הרשאות גישה למדיה/מצלמה
+        databaseService = DatabaseService.getInstance(); // אתחול שירות הנתונים
 
-        // אתחול רכיבים מה-XML
+        // קישור רכיבי ה-XML לשדות בקוד
         etItemName = findViewById(R.id.etItemName);
         spinnerCategory = findViewById(R.id.spinnerCategory);
-        // כפתור לשמירת הפריט
-        Button btnSaveItem = findViewById(R.id.btnSaveItem);
         ivPreview = findViewById(R.id.ivPreview);
+        Button btnSaveItem = findViewById(R.id.btnSaveItem);
 
-        // הגדרת קטגוריות ל-Spinner
+        // אתחול הקטגוריות לתפריט הנפתח (Tops, Bottoms, Shoes)
         setupCategorySpinner();
 
-        // לחיצה על כפתור "Save Item"
+        // הגדרת לחיצה על כפתור "Save Item" לקריאה לפונקציית saveItem
         btnSaveItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,107 +70,115 @@ public class addItem extends AppCompatActivity implements View.OnClickListener {
             }
         });
 
-        // לחיצה על כפתור "Upload Image"
+        // לחיצה על תמונת התצוגה תציג בחירה בין מצלמה לגלריה
         ivPreview.setOnClickListener(this);
 
-
-
-        /// register the activity result launcher for selecting image from gallery
+        // משגר לבחירת תמונה מהגלריה
         selectImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Uri selectedImage = result.getData().getData();
-                        ivPreview.setImageURI(selectedImage);
-                        /// set the tag for the image view to null
-                        ivPreview.setTag(null);
+                        ivPreview.setImageURI(selectedImage); // מציג את התמונה שנבחרה
+                        ivPreview.setTag(null); // איפוס תג לצורך זיהוי עתידי
                     }
                 });
 
-        /// register the activity result launcher for capturing image from camera
+        // משגר לצילום תמונה מהמצלמה
         captureImageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Bitmap bitmap = (Bitmap) result.getData().getExtras().get("data");
-                        ivPreview.setImageBitmap(bitmap);
-                        /// set the tag for the image view to null
-                        ivPreview.setTag(null);
+                        ivPreview.setImageBitmap(bitmap); // מציג את התמונה המצולמת
+                        ivPreview.setTag(null); // איפוס תג
                     }
                 });
     }
 
-    /// select image from gallery
+    // פונקציה לפתיחת הגלריה
     private void selectImageFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         selectImageLauncher.launch(intent);
     }
 
-    /// capture image from camera
+    // פונקציה להפעלת מצלמה
     private void captureImageFromCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         captureImageLauncher.launch(takePictureIntent);
     }
 
-    // אתחול Spinner עם קטגוריות
+    // אתחול הקטגוריות ב־Spinner (רשימה נפתחת)
     private void setupCategorySpinner() {
         List<String> categories = new ArrayList<>();
         categories.add("Tops");
         categories.add("Bottoms");
         categories.add("Shoes");
 
+        // מתאם פשוט להצגת רשימת מחרוזות בתוך Spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
     }
 
-
-    // שמירת הפריט
+    // שמירת פריט למסד הנתונים
     private void saveItem() {
-        String itemName = etItemName.getText().toString().trim();
-        String category = spinnerCategory.getSelectedItem().toString();
+        String itemName = etItemName.getText().toString().trim(); // קבלת שם הפריט
+        String category = spinnerCategory.getSelectedItem().toString(); // קבלת הקטגוריה הנבחרת
 
-        // בדיקות תקינות
+        // בדיקה אם השם ריק
         if (itemName.isEmpty()) {
             Toast.makeText(this, "Please enter item name", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // יצירת פריט חדש עם תמונה מקודדת ל-Base64
         String id = databaseService.generateNewItemId();
-        Item item = new Item(id, itemName, category, ImageUtil.convertTo64Base(ivPreview), AuthenticationService.getInstance().getCurrentUserId());
+        Item item = new Item(
+                id,
+                itemName,
+                category,
+                ImageUtil.convertTo64Base(ivPreview), // המרה של תמונה לבסיס 64
+                AuthenticationService.getInstance().getCurrentUserId() // ID של המשתמש המחובר
+        );
+
+        // שמירת הפריט במסד הנתונים
         databaseService.createNewItem(item, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public void onCompleted(Void object) {
-                // חזרה ל-MyClosetActivity
-                finish(); // לסגור את המסך הנוכחי
+                finish(); // סגירת המסך (חזרה ל־MyClosetActivity)
             }
 
             @Override
             public void onFailed(Exception e) {
-
+                // טיפול בשגיאה אם נדרש (כאן זה ריק)
             }
         });
     }
 
+    // תיבת דיאלוג לבחירה בין צילום לבין גלריה
     @Override
     public void onClick(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select Image Source");
 
+        // אפשרויות עם טקסט ואייקון: גלריה או מצלמה
         final ArrayList<Map.Entry<String, Integer>> options = new ArrayList<>();
         options.add(new AbstractMap.SimpleEntry<>("Gallery", R.drawable.gallery_thumbnail));
         options.add(new AbstractMap.SimpleEntry<>("Camera", R.drawable.photo_camera));
 
+        // מתאם מותאם לתיבת הבחירה עם אייקונים
         ImageSourceAdapter adapter = new ImageSourceAdapter(getApplicationContext(), options);
 
+        // הצגת הדיאלוג עם שתי האפשרויות
         builder.setAdapter(adapter, (DialogInterface dialog, int index) -> {
             if (index == 0) {
-                selectImageFromGallery();
+                selectImageFromGallery(); // בחירת תמונה מהגלריה
             } else if (index == 1) {
-                captureImageFromCamera();
+                captureImageFromCamera(); // צילום תמונה מהמצלמה
             }
         });
 
-        builder.show();
+        builder.show(); // הצגת הדיאלוג
     }
 }

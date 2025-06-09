@@ -18,11 +18,13 @@ import com.example.amitappfit.util.ImageUtil;
 
 import java.util.List;
 
+// מתאם לרשימת פריטים (בגדים) בתצוגת Closet
 public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder> {
 
-    private List<Item> items;
-    private final Context context; // נדרש כדי להפעיל Intents
+    private List<Item> items; // רשימת פריטים שמוצגת ברשימה
+    private final Context context; // נדרש לצורך פתיחת Activities דרך Intents
 
+    // בנאי שמקבל את רשימת הפריטים והקונטקסט של הפעילות
     public ClosetAdapter(List<Item> items, Context context) {
         this.items = items;
         this.context = context;
@@ -31,27 +33,37 @@ public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // יצירת ViewHolder
+        // יצירת View חדש מכל שורה ברשימה לפי תבנית XML (item_closet.xml)
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_closet, parent, false);
-        return new ViewHolder(itemView);
+        return new ViewHolder(itemView); // מחזיר את ה-ViewHolder עם הקשרים לתצוגות הפנימיות
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // הצגת פריט ב-ViewHolder
+        // קישור הנתונים של כל פריט (Item) לאלמנטים הגרפיים בתצוגה
         Item item = items.get(position);
+
+        // קובע את שם הפריט ב-TextView
         holder.itemName.setText(item.getTitle());
+
+        // מציג את התמונה בעזרת פונקציית עזר שהופכת Base64 לתמונה
         holder.itemImage.setImageBitmap(ImageUtil.convertFrom64base(item.getPicBase64()));
 
-        // הגדרת Listener ללחיצה על פריט
+        // מאזין ללחיצה על כל הפריט ברשימה
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // פתיחת עמוד EditItemActivity עם המידע של הפריט שנבחר
+                // יצירת Intent לפתיחת מסך עריכת הפריט (EditItemActivity)
                 Intent intent = new Intent(context, EditItemActivity.class);
-                intent.putExtra("item_id", item.getId()); // מעביר את המידע על הפריט לעמוד העריכה
-                intent.putExtra("item_user_id", item.getUserId()); // מעביר את המידע על הפריט לעמוד העריכה
+
+                // מעביר את מזהה הפריט כ-extra
+                intent.putExtra("item_id", item.getId());
+
+                // מעביר גם את מזהה המשתמש (למקרה שצריך לבדוק הרשאות או התאמה)
+                intent.putExtra("item_user_id", item.getUserId());
+
+                // הפעלת המסך החדש
                 context.startActivity(intent);
             }
         });
@@ -59,25 +71,27 @@ public class ClosetAdapter extends RecyclerView.Adapter<ClosetAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
+        // מחזיר את מספר הפריטים ברשימה — נדרש ל-RecyclerView
         return items.size();
     }
 
-    // פונקציה לעדכון רשימת הפריטים
+    // מאפשר לעדכן את רשימת הפריטים מבחוץ (למשל אחרי שינוי או חיפוש)
     public void updateItems(List<Item> newItems) {
         this.items = newItems;
-        notifyDataSetChanged(); // עדכון ה-RecyclerView
+        notifyDataSetChanged(); // מודיע לרשימה להתעדכן ולהתרענן
     }
 
-    // הגדרת ViewHolder
+    // מחלקת ViewHolder פנימית שמחזיקה את התצוגות של כל פריט ברשימה
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView itemName;
-        public ImageView itemImage; // רק אם אתה מציג גם תמונות
+        public TextView itemName;     // שם הפריט
+        public ImageView itemImage;   // תמונת הפריט
 
         public ViewHolder(View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.itemName); // הגדרת ה-TextView
-            itemImage = itemView.findViewById(R.id.itemImage); // הגדרת ה-ImageView (אם יש תמונה)
+            // קישור בין המשתנים לתצוגות בקובץ ה-XML (item_closet.xml)
+            itemName = itemView.findViewById(R.id.itemName);
+            itemImage = itemView.findViewById(R.id.itemImage);
         }
     }
 }
